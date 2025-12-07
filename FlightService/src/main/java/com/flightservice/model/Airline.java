@@ -11,7 +11,6 @@ public class Airline {
 	@Id
 	@Indexed(unique=true)
 	private String airlineCode;
-	private String airlineName;
 	public String getAirlineCode() {
 		return airlineCode;
 	}
@@ -24,7 +23,6 @@ public class Airline {
 	public void setAirlineName(String airlineName) {
 		this.airlineName = airlineName;
 	}
-	
-	
+	private String airlineName;
 
 }

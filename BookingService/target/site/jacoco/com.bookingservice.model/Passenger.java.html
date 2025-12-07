@@ -9,17 +9,65 @@ import lombok.NoArgsConstructor;
 @Document(&quot;passengers&quot;)
 <span class="pc bpc" id="L10" title="36 of 64 branches missed.">@Data </span>
 <span class="fc" id="L11">@NoArgsConstructor </span>
-<span class="fc" id="L12">@AllArgsConstructor </span>
+<span class="nc" id="L12">@AllArgsConstructor </span>
 public class Passenger {
 
     @Id
-<span class="fc" id="L16">    private String passengerId;</span>
-<span class="fc" id="L17">    private String bookingId; // fk -&gt; booking</span>
-<span class="fc" id="L18">    private String name;</span>
-<span class="fc" id="L19">    private int age;</span>
-<span class="fc" id="L20">    private Gender gender;</span>
-<span class="fc" id="L21">    private Meal meal;</span>
-<span class="fc" id="L22">    private String seatOutbound; </span>
-<span class="fc" id="L23">    private String seatReturn;   </span>
+    private String passengerId;
+    private String bookingId; // fk -&gt; booking
+    private String name;
+    private int age;
+    private Gender gender;
+    public String getPassengerId() {
+<span class="fc" id="L22">		return passengerId;</span>
+	}
+	public void setPassengerId(String passengerId) {
+<span class="fc" id="L25">		this.passengerId = passengerId;</span>
+<span class="fc" id="L26">	}</span>
+	public String getBookingId() {
+<span class="fc" id="L28">		return bookingId;</span>
+	}
+	public void setBookingId(String bookingId) {
+<span class="fc" id="L31">		this.bookingId = bookingId;</span>
+<span class="fc" id="L32">	}</span>
+	public String getName() {
+<span class="fc" id="L34">		return name;</span>
+	}
+	public void setName(String name) {
+<span class="fc" id="L37">		this.name = name;</span>
+<span class="fc" id="L38">	}</span>
+	public int getAge() {
+<span class="fc" id="L40">		return age;</span>
+	}
+	public void setAge(int age) {
+<span class="fc" id="L43">		this.age = age;</span>
+<span class="fc" id="L44">	}</span>
+	public Gender getGender() {
+<span class="fc" id="L46">		return gender;</span>
+	}
+	public void setGender(Gender gender) {
+<span class="fc" id="L49">		this.gender = gender;</span>
+<span class="fc" id="L50">	}</span>
+	public Meal getMeal() {
+<span class="fc" id="L52">		return meal;</span>
+	}
+	public void setMeal(Meal meal) {
+<span class="fc" id="L55">		this.meal = meal;</span>
+<span class="fc" id="L56">	}</span>
+	public String getSeatOutbound() {
+<span class="fc" id="L58">		return seatOutbound;</span>
+	}
+	public void setSeatOutbound(String seatOutbound) {
+<span class="fc" id="L61">		this.seatOutbound = seatOutbound;</span>
+<span class="fc" id="L62">	}</span>
+	public String getSeatReturn() {
+<span class="fc" id="L64">		return seatReturn;</span>
+	}
+	public void setSeatReturn(String seatReturn) {
+<span class="fc" id="L67">		this.seatReturn = seatReturn;</span>
+<span class="fc" id="L68">	}</span>
+	private Meal meal;
+    private String seatOutbound; 
+    private String seatReturn;   
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

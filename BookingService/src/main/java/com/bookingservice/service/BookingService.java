@@ -103,26 +103,44 @@ public class BookingService {
     }
 
     // to create a booking
-    private Mono<Booking> createBooking(
-            BookingRequest req,
-            String outboundId,
-            String returnId) {
+    private Mono<Booking> createBooking(BookingRequest req, String outboundId, String returnId) {
 
-        Booking booking = new Booking();
-        booking.setOutboundFlightId(outboundId);
-        booking.setReturnFlight(returnId);
-        booking.setTripType(req.getTripType());
-        booking.setContactName(req.getContactName());
-        booking.setContactEmail(req.getContactEmail());
-        booking.setTotalPassengers(req.getPassengers().size());
-        booking.setStatus(BookingStatus.CONFIRMED);
-        booking.setPnrOutbound(UUID.randomUUID().toString().substring(0, 6).toUpperCase());
-        if (returnId != null) {
-            booking.setPnrReturn(UUID.randomUUID().toString().substring(0, 6).toUpperCase());
-        }
+        return Flux.fromIterable(req.getPassengers())
+                .flatMap(p ->
+                        bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(
+                                        outboundId,
+                                        p.getName(),
+                                        p.getAge()
+                                )
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        return Mono.error(new ValidationException(
+                                                "Passenger " + p.getName() + " is already booked on this flight"
+                                        ));
+                                    }
+                                    return Mono.empty();
+                                })
+                )
+                .then(Mono.defer(() -> {
 
-        return bookingRepository.save(booking);
+                    Booking booking = new Booking();
+                    booking.setOutboundFlightId(outboundId);
+                    booking.setReturnFlight(returnId);
+                    booking.setTripType(req.getTripType());
+                    booking.setContactName(req.getContactName());
+                    booking.setContactEmail(req.getContactEmail());
+                    booking.setTotalPassengers(req.getPassengers().size());
+                    booking.setStatus(BookingStatus.CONFIRMED);
+
+                    booking.setPnrOutbound(UUID.randomUUID().toString().substring(0, 6).toUpperCase());
+                    if (returnId != null) {
+                        booking.setPnrReturn(UUID.randomUUID().toString().substring(0, 6).toUpperCase());
+                    }
+
+                    return bookingRepository.save(booking);
+                }));
     }
+
 
    // to save passengers 
     private Mono<Void> savePassengers(BookingRequest req, Booking booking) {

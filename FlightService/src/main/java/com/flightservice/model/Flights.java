@@ -17,16 +17,7 @@ public class Flights {
 	private String flightNumber;
 	private String airlineCode; // fk -> airline
 	private Cities sourceCity;
-    private Cities destinationCity;
-    private LocalDate departureDate;
-    private LocalDate arrivalDate;
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
-    private boolean mealAvailable;
-    private int totalSeats;
-    private int availableSeats;
-    private double price;
-	public String getFlightId() {
+    public String getFlightId() {
 		return flightId;
 	}
 	public void setFlightId(String flightId) {
@@ -104,8 +95,15 @@ public class Flights {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-    
-    
+	private Cities destinationCity;
+    private LocalDate departureDate;
+    private LocalDate arrivalDate;
+    private LocalTime departureTime;
+    private LocalTime arrivalTime;
+    private boolean mealAvailable;
+    private int totalSeats;
+    private int availableSeats;
+    private double price;
 	
 
 }

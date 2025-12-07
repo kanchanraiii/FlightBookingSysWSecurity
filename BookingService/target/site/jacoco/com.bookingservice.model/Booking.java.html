@@ -10,19 +10,79 @@ import lombok.NoArgsConstructor;
 @Document(collection=&quot;booking&quot;)
 <span class="pc bpc" id="L11" title="47 of 80 branches missed.">@Data</span>
 <span class="fc" id="L12">@NoArgsConstructor</span>
-<span class="fc" id="L13">@AllArgsConstructor</span>
+<span class="nc" id="L13">@AllArgsConstructor</span>
 public class Booking {
 	
 	@Id
-<span class="fc" id="L17">	private String bookingId;	</span>
-<span class="fc" id="L18">	private TripType tripType;</span>
-<span class="fc" id="L19">	private String outboundFlightId; //fk-&gt; flightinventory</span>
-<span class="fc" id="L20">	private String returnFlight;</span>
-<span class="fc" id="L21">	private String pnrOutbound;</span>
-<span class="fc" id="L22">    private String pnrReturn;</span>
-<span class="fc" id="L23">    private String contactName;</span>
-<span class="fc" id="L24">    private String contactEmail;</span>
-<span class="fc" id="L25">    private int totalPassengers;</span>
-<span class="fc" id="L26">    private BookingStatus status;</span>
+	private String bookingId;	
+	private TripType tripType;
+	private String outboundFlightId; //fk-&gt; flightinventory
+	private String returnFlight;
+	private String pnrOutbound;
+    public String getBookingId() {
+<span class="fc" id="L23">		return bookingId;</span>
+	}
+	public void setBookingId(String bookingId) {
+<span class="fc" id="L26">		this.bookingId = bookingId;</span>
+<span class="fc" id="L27">	}</span>
+	public TripType getTripType() {
+<span class="fc" id="L29">		return tripType;</span>
+	}
+	public void setTripType(TripType tripType) {
+<span class="fc" id="L32">		this.tripType = tripType;</span>
+<span class="fc" id="L33">	}</span>
+	public String getOutboundFlightId() {
+<span class="fc" id="L35">		return outboundFlightId;</span>
+	}
+	public void setOutboundFlightId(String outboundFlightId) {
+<span class="fc" id="L38">		this.outboundFlightId = outboundFlightId;</span>
+<span class="fc" id="L39">	}</span>
+	public String getReturnFlight() {
+<span class="fc" id="L41">		return returnFlight;</span>
+	}
+	public void setReturnFlight(String returnFlight) {
+<span class="fc" id="L44">		this.returnFlight = returnFlight;</span>
+<span class="fc" id="L45">	}</span>
+	public String getPnrOutbound() {
+<span class="fc" id="L47">		return pnrOutbound;</span>
+	}
+	public void setPnrOutbound(String pnrOutbound) {
+<span class="fc" id="L50">		this.pnrOutbound = pnrOutbound;</span>
+<span class="fc" id="L51">	}</span>
+	public String getPnrReturn() {
+<span class="fc" id="L53">		return pnrReturn;</span>
+	}
+	public void setPnrReturn(String pnrReturn) {
+<span class="fc" id="L56">		this.pnrReturn = pnrReturn;</span>
+<span class="fc" id="L57">	}</span>
+	public String getContactName() {
+<span class="fc" id="L59">		return contactName;</span>
+	}
+	public void setContactName(String contactName) {
+<span class="fc" id="L62">		this.contactName = contactName;</span>
+<span class="fc" id="L63">	}</span>
+	public String getContactEmail() {
+<span class="fc" id="L65">		return contactEmail;</span>
+	}
+	public void setContactEmail(String contactEmail) {
+<span class="fc" id="L68">		this.contactEmail = contactEmail;</span>
+<span class="fc" id="L69">	}</span>
+	public int getTotalPassengers() {
+<span class="fc" id="L71">		return totalPassengers;</span>
+	}
+	public void setTotalPassengers(int totalPassengers) {
+<span class="fc" id="L74">		this.totalPassengers = totalPassengers;</span>
+<span class="fc" id="L75">	}</span>
+	public BookingStatus getStatus() {
+<span class="fc" id="L77">		return status;</span>
+	}
+	public void setStatus(BookingStatus status) {
+<span class="fc" id="L80">		this.status = status;</span>
+<span class="fc" id="L81">	}</span>
+	private String pnrReturn;
+    private String contactName;
+    private String contactEmail;
+    private int totalPassengers;
+    private BookingStatus status;
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

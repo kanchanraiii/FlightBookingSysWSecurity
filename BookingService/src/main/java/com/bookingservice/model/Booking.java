@@ -1,5 +1,7 @@
 package com.bookingservice.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,11 +21,13 @@ public class Booking {
 	private String outboundFlightId; //fk-> flightinventory
 	private String returnFlight;
 	private String pnrOutbound;
-    private String pnrReturn;
-    private String contactName;
-    private String contactEmail;
-    private int totalPassengers;
-    private BookingStatus status;
+	private List<Passenger> passengers;
+    public List<Passenger> getPassengers() {
+		return passengers;
+	}
+	public void setPassengers(List<Passenger> passengers) {
+		this.passengers = passengers;
+	}
 	public String getBookingId() {
 		return bookingId;
 	}
@@ -84,6 +88,9 @@ public class Booking {
 	public void setStatus(BookingStatus status) {
 		this.status = status;
 	}
-    
-    
+	private String pnrReturn;
+    private String contactName;
+    private String contactEmail;
+    private int totalPassengers;
+    private BookingStatus status;
 }
