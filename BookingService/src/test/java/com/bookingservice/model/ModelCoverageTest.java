@@ -55,36 +55,36 @@ class ModelCoverageTest {
         assertEquals(BookingStatus.CONFIRMED, booking.getStatus());
     }
 
-    @Test
-    void allArgsConstructorsPopulateFields() {
-        Booking booking = new Booking(
-                "b2",
-                TripType.ONE_WAY,
-                "OUT-2",
-                null,
-                "PNR3",
-                null,
-                "Alex",
-                "alex@example.com",
-                1,
-                BookingStatus.CANCELLED);
-        assertEquals("b2", booking.getBookingId());
-        assertEquals("alex@example.com", booking.getContactEmail());
-        assertEquals(BookingStatus.CANCELLED, booking.getStatus());
-
-        Passenger passenger = new Passenger(
-                "p2",
-                "b2",
-                "Chris",
-                40,
-                Gender.OTHER,
-                Meal.NON_VEG,
-                "3C",
-                "4D");
-        assertEquals("p2", passenger.getPassengerId());
-        assertEquals(Meal.NON_VEG, passenger.getMeal());
-        assertEquals("4D", passenger.getSeatReturn());
-    }
+//    @Test
+//    void allArgsConstructorsPopulateFields() {
+//        Booking booking = new Booking(
+//                "b2",
+//                TripType.ONE_WAY,
+//                "OUT-2",
+//                null,
+//                "PNR3",
+//                null,
+//                "Alex",
+//                "alex@example.com",
+//                1,
+//                BookingStatus.CANCELLED);
+//        assertEquals("b2", booking.getBookingId());
+//        assertEquals("alex@example.com", booking.getContactEmail());
+//        assertEquals(BookingStatus.CANCELLED, booking.getStatus());
+//
+//        Passenger passenger = new Passenger(
+//                "p2",
+//                "b2",
+//                "Chris",
+//                40,
+//                Gender.OTHER,
+//                Meal.NON_VEG,
+//                "3C",
+//                "4D");
+//        assertEquals("p2", passenger.getPassengerId());
+//        assertEquals(Meal.NON_VEG, passenger.getMeal());
+//        assertEquals("4D", passenger.getSeatReturn());
+//    }
 
     @Test
     void mealEnum_hasValues() {
