@@ -8,16 +8,20 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @Configuration
 public class SecurityConfig {
 
-    @Bean
+	@Bean
     public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http) {
 
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/auth/**").permitAll()
-                        .pathMatchers("/flight/search", "/flight/getAllFlights").permitAll()
+                        .pathMatchers("/flight/api/flight/search").permitAll()
+                        .pathMatchers("/flight/api/flight/getAllFlights").permitAll()
+                        .pathMatchers("/flight/api/flight/getFlight/**").permitAll()
+                        .pathMatchers("/flight/api/flight/getAllAirlines").permitAll()
                         .anyExchange().authenticated()
                 )
+                
                 .build();
     }
 }
