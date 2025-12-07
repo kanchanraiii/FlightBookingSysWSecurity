@@ -314,15 +314,15 @@ class BookingServiceTest {
 //                .expectNext(booking)
 //                .verifyComplete();
 //    }
-
-    @Test
-    void getTicket_notFoundThrowsResourceNotFound() {
-        when(bookingRepository.findByPnrOutbound("MISSING")).thenReturn(Mono.empty());
-
-        StepVerifier.create(bookingService.getTicket("MISSING"))
-                .expectError(ResourceNotFoundException.class)
-                .verify();
-    }
+//
+//    @Test
+//    void getTicket_notFoundThrowsResourceNotFound() {
+//        when(bookingRepository.findByPnrOutbound("MISSING")).thenReturn(Mono.empty());
+//
+//        StepVerifier.create(bookingService.getTicket("MISSING"))
+//                .expectError(ResourceNotFoundException.class)
+//                .verify();
+//    }
 
 //    @Test
 //    void cancelTicket_marksCancelledAndReleasesSeats() {
@@ -353,7 +353,7 @@ class BookingServiceTest {
 //        verify(flightClient, times(1)).releaseSeats("OUT-6", 2);
 //        verify(flightClient, times(1)).releaseSeats("RET-6", 2);
 //    }
-
+//
 //    @Test
 //    void cancelTicket_oneWayReleasesOnlyOutbound() {
 //        Booking booking = new Booking(

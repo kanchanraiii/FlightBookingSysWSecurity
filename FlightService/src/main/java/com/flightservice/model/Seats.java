@@ -13,10 +13,7 @@ public class Seats {
     @Id
     private String seatId;
     private boolean booked;
-    private String flightId; // fk -> flightInventory
-    private String seatNo;
-    private boolean available;
-	public String getSeatId() {
+    public String getSeatId() {
 		return seatId;
 	}
 	public void setSeatId(String seatId) {
@@ -46,8 +43,9 @@ public class Seats {
 	public void setAvailable(boolean available) {
 		this.available = available;
 	}
-    
-    
+	private String flightId; // fk -> flightInventory
+    private String seatNo;
+    private boolean available;
 	
 	
 }

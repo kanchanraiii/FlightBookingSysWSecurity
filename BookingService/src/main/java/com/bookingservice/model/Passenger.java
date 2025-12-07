@@ -18,10 +18,7 @@ public class Passenger {
     private String name;
     private int age;
     private Gender gender;
-    private Meal meal;
-    private String seatOutbound; 
-    private String seatReturn;
-	public String getPassengerId() {
+    public String getPassengerId() {
 		return passengerId;
 	}
 	public void setPassengerId(String passengerId) {
@@ -68,7 +65,8 @@ public class Passenger {
 	}
 	public void setSeatReturn(String seatReturn) {
 		this.seatReturn = seatReturn;
-	}   
-    
-    
+	}
+	private Meal meal;
+    private String seatOutbound; 
+    private String seatReturn;   
 }
