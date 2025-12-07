@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -32,13 +30,8 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         System.out.println("🔍 Incoming Path = " + path);
 
-        // Public routes
-        if (path.startsWith("/auth")
-                || path.startsWith("/api/flight/search")
-                || path.startsWith("/api/flight/getAllFlights")
-                || path.startsWith("/api/flight/getFlight")
-                || (path.startsWith("/api/flight/getAllAirlines") && method == HttpMethod.GET)) {
-
+        // Public routes (no auth required)
+        if (isPublic(path, method)) {
             return chain.filter(exchange);
         }
 
@@ -57,24 +50,11 @@ public class JwtAuthenticationFilter implements WebFilter {
         // Extract claims
         Claims claims = jwtUtil.extractClaims(token);
         String role = claims.get("role", String.class);
+        if (role == null) {
+            return unauthorized(exchange);
+        }
 
         String normalizedRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
-
-        boolean isAdmin = normalizedRole.equals("ROLE_ADMIN");
-        boolean isUser = normalizedRole.equals("ROLE_USER");
-
-       
-        if (path.startsWith("/api/booking") && !isUser) {
-            return forbidden(exchange);
-        }
-
-        if (path.startsWith("/api/flight")) {
-            if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.DELETE) {
-                if (!isAdmin) {
-                    return forbidden(exchange);
-                }
-            }
-        }
 
         return chain.filter(exchange)
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(
@@ -83,6 +63,21 @@ public class JwtAuthenticationFilter implements WebFilter {
                                 List.of(new SimpleGrantedAuthority(normalizedRole))
                         )
                 ));
+    }
+
+    private boolean isPublic(String path, HttpMethod method) {
+        if (path.startsWith("/auth") || path.startsWith("/api/auth")) {
+            return true;
+        }
+        if (method == HttpMethod.GET &&
+                (path.startsWith("/flight/api/flight/getAllAirlines")
+                        || path.startsWith("/flight/api/flight/getAllFlights"))) {
+            return true;
+        }
+        if (method == HttpMethod.POST && path.startsWith("/flight/api/flight/search")) {
+            return true;
+        }
+        return false;
     }
 
     private Mono<Void> unauthorized(ServerWebExchange exchange) {
@@ -95,5 +90,3 @@ public class JwtAuthenticationFilter implements WebFilter {
         return exchange.getResponse().setComplete();
     }
 }
-
-
