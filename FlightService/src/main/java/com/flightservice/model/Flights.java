@@ -26,6 +26,86 @@ public class Flights {
     private int totalSeats;
     private int availableSeats;
     private double price;
+	public String getFlightId() {
+		return flightId;
+	}
+	public void setFlightId(String flightId) {
+		this.flightId = flightId;
+	}
+	public String getFlightNumber() {
+		return flightNumber;
+	}
+	public void setFlightNumber(String flightNumber) {
+		this.flightNumber = flightNumber;
+	}
+	public String getAirlineCode() {
+		return airlineCode;
+	}
+	public void setAirlineCode(String airlineCode) {
+		this.airlineCode = airlineCode;
+	}
+	public Cities getSourceCity() {
+		return sourceCity;
+	}
+	public void setSourceCity(Cities sourceCity) {
+		this.sourceCity = sourceCity;
+	}
+	public Cities getDestinationCity() {
+		return destinationCity;
+	}
+	public void setDestinationCity(Cities destinationCity) {
+		this.destinationCity = destinationCity;
+	}
+	public LocalDate getDepartureDate() {
+		return departureDate;
+	}
+	public void setDepartureDate(LocalDate departureDate) {
+		this.departureDate = departureDate;
+	}
+	public LocalDate getArrivalDate() {
+		return arrivalDate;
+	}
+	public void setArrivalDate(LocalDate arrivalDate) {
+		this.arrivalDate = arrivalDate;
+	}
+	public LocalTime getDepartureTime() {
+		return departureTime;
+	}
+	public void setDepartureTime(LocalTime departureTime) {
+		this.departureTime = departureTime;
+	}
+	public LocalTime getArrivalTime() {
+		return arrivalTime;
+	}
+	public void setArrivalTime(LocalTime arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	public boolean isMealAvailable() {
+		return mealAvailable;
+	}
+	public void setMealAvailable(boolean mealAvailable) {
+		this.mealAvailable = mealAvailable;
+	}
+	public int getTotalSeats() {
+		return totalSeats;
+	}
+	public void setTotalSeats(int totalSeats) {
+		this.totalSeats = totalSeats;
+	}
+	public int getAvailableSeats() {
+		return availableSeats;
+	}
+	public void setAvailableSeats(int availableSeats) {
+		this.availableSeats = availableSeats;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+    
+    
 	
 
 }
