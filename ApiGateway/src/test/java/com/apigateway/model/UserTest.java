@@ -7,20 +7,14 @@ import org.junit.jupiter.api.Test;
 class UserTest {
 
     @Test
-    void settersAndGettersWork() {
-        User user = new User();
-        user.setId("id-1");
-        user.setUsername("alice");
-        user.setPassword("secret");
-        user.setFullName("Alice Doe");
-        user.setEmail("alice@example.com");
-        user.setRole(Role.ROLE_ADMIN);
+    void accessorsWork() {
+        User user = new User("id-1", "alice", "secret", "Alice Doe", "alice@example.com", Role.ROLE_ADMIN);
 
-        assertEquals("id-1", user.getId());
-        assertEquals("alice", user.getUsername());
-        assertEquals("secret", user.getPassword());
-        assertEquals("Alice Doe", user.getFullName());
-        assertEquals("alice@example.com", user.getEmail());
-        assertEquals(Role.ROLE_ADMIN, user.getRole());
+        assertEquals("id-1", user.id());
+        assertEquals("alice", user.username());
+        assertEquals("secret", user.password());
+        assertEquals("Alice Doe", user.fullName());
+        assertEquals("alice@example.com", user.email());
+        assertEquals(Role.ROLE_ADMIN, user.role());
     }
 }

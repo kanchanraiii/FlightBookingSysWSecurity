@@ -9,18 +9,18 @@ import com.apigateway.model.Role;
 class AuthRegisterRequestTest {
 
     @Test
-    void settersAndGettersCoverInheritance() {
-        AuthRegisterRequest req = new AuthRegisterRequest();
-        req.setUsername("user");
-        req.setPassword("pass");
-        req.setFullName("Full Name");
-        req.setEmail("user@example.com");
-        req.setRole(Role.ROLE_USER);
+    void accessorsCoverAllFields() {
+        AuthRegisterRequest req = new AuthRegisterRequest(
+                "user",
+                "pass",
+                "Full Name",
+                "user@example.com",
+                Role.ROLE_USER);
 
-        assertEquals("user", req.getUsername());
-        assertEquals("pass", req.getPassword());
-        assertEquals("Full Name", req.getFullName());
-        assertEquals("user@example.com", req.getEmail());
-        assertEquals(Role.ROLE_USER, req.getRole());
+        assertEquals("user", req.username());
+        assertEquals("pass", req.password());
+        assertEquals("Full Name", req.fullName());
+        assertEquals("user@example.com", req.email());
+        assertEquals(Role.ROLE_USER, req.role());
     }
 }
