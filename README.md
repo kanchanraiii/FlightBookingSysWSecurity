@@ -73,8 +73,8 @@ These are the features and implementations carried out in this project.
 ---
 
 ## SonarQube
-Below is the SonarQube Report after fixing all the issues (29 Maintainibilty 15 Reliabilty).
+Below is the SonarQube Report after fixing all the issues.
 
-![SonarQube](https://github.com/kanchanraiii/FlightBookingSystemMicroservice/blob/main/After2.png)
+![SonarQube](https://raw.githubusercontent.com/kanchanraiii/FlightBookingSysWSecurity/refs/heads/main/SonarCubeReport.png)
 
 ---
