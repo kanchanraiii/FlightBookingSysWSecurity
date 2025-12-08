@@ -6,6 +6,7 @@ import com.apigateway.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -32,12 +33,13 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     public Mono<String> login(@RequestBody User loginRequest) {
         return repo.findByUsername(loginRequest.getUsername())
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")))
                 .flatMap(user -> {
-                    if (encoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                        String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
-                        return Mono.just(token);
+                    if (!encoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                        return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
                     }
-                    return Mono.error(new RuntimeException("Invalid credentials"));
+                    String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+                    return Mono.just(token);
                 });
     }
 }
