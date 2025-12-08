@@ -7,6 +7,7 @@ import com.flightservice.model.TripType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ModelTests {
@@ -19,6 +20,15 @@ class ModelTests {
 
         assertEquals("AI", airline.getAirlineCode());
         assertEquals("Air India", airline.getAirlineName());
+
+        Airline same = new Airline();
+        same.setAirlineCode("AI");
+        same.setAirlineName("Air India");
+        assertEquals(airline, same);
+        assertEquals(airline.hashCode(), same.hashCode());
+        same.setAirlineName("Different");
+        assertNotEquals(airline, same);
+        assertNotEquals(airline, null);
     }
 
     @Test
@@ -33,6 +43,18 @@ class ModelTests {
         assertEquals("FL1", seat.getFlightId());
         assertEquals("12A", seat.getSeatNo());
         assertTrue(seat.isAvailable());
+
+        Seats same = new Seats();
+        same.setSeatId("S1");
+        same.setFlightId("FL1");
+        same.setSeatNo("12A");
+        same.setAvailable(true);
+
+        assertEquals(seat, same);
+        assertEquals(seat.hashCode(), same.hashCode());
+        same.setSeatNo("DIFF");
+        assertNotEquals(seat, same);
+        assertNotEquals(seat, null);
     }
 
    
