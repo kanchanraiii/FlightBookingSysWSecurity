@@ -20,7 +20,6 @@ import com.bookingservice.model.Booking;
 import com.bookingservice.model.BookingEventType;
 import com.bookingservice.model.BookingStatus;
 import com.bookingservice.model.Gender;
-import com.bookingservice.model.Meal;
 import com.bookingservice.model.TripType;
 import com.bookingservice.repository.BookingRepository;
 import com.bookingservice.repository.PassengerRepository;

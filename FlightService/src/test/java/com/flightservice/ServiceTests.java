@@ -21,6 +21,9 @@ import com.flightservice.service.FlightService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -91,27 +94,11 @@ class ServiceLayerTest {
                 .verify();
     }
 
-    @Test
-    void addAirline_invalidCode() {
-        addAirlineRequest.setAirlineCode("");
-
-        StepVerifier.create(airlineService.addAirline(addAirlineRequest))
-                .expectError(ValidationException.class)
-                .verify();
-    }
-
-    @Test
-    void addAirline_nullCode() {
-        addAirlineRequest.setAirlineCode(null);
-
-        StepVerifier.create(airlineService.addAirline(addAirlineRequest))
-                .expectError(ValidationException.class)
-                .verify();
-    }
-
-    @Test
-    void addAirline_codeTooLong() {
-        addAirlineRequest.setAirlineCode("TOOLONG");
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"", "TOOLONG"})
+    void addAirline_invalidCodes(String code) {
+        addAirlineRequest.setAirlineCode(code);
 
         StepVerifier.create(airlineService.addAirline(addAirlineRequest))
                 .expectError(ValidationException.class)

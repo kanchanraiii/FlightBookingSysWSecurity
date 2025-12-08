@@ -2,8 +2,8 @@ package com.bookingservice.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ class ModelEqualityTest {
         assertEquals(b1, b2);
         assertEquals(b1.hashCode(), b2.hashCode());
         assertNotEquals(b1, b3);
-        assertNotEquals(null, b1);
-        assertFalse(b1.equals("string"));
+        assertNotNull(b1);
+        assertNotEquals(b1, "string");
         assertTrue(b1.toString().contains("PNR1"));
     }
 
@@ -45,8 +45,8 @@ class ModelEqualityTest {
         assertEquals(p1, p2);
         assertEquals(p1.hashCode(), p2.hashCode());
         assertNotEquals(p1, p3);
-        assertNotEquals(null, p1);
-        assertFalse(p1.equals("string"));
+        assertNotNull(p1);
+        assertNotEquals(p1, "string");
         assertTrue(p1.toString().contains("John"));
         assertNotEquals(p1, p4);
         assertEquals(p1, p1); // self check
@@ -77,8 +77,8 @@ class ModelEqualityTest {
         assertEquals(e1, e2);
         assertEquals(e1.hashCode(), e2.hashCode());
         assertNotEquals(e1, e3);
-        assertNotEquals(null, e1);
-        assertFalse(e1.equals("string"));
+        assertNotNull(e1);
+        assertNotEquals(e1, "string");
         assertTrue(e1.toString().contains("b1"));
     }
 
@@ -103,9 +103,9 @@ class ModelEqualityTest {
         Booking baseline = fullBooking();
         Booking equal = fullBooking();
         assertEquals(baseline, equal);
-        assertNotEquals(baseline, null);
-        assertFalse(baseline.equals("string"));
-        assertTrue(baseline.equals(baseline));
+        assertNotNull(baseline);
+        assertNotEquals(baseline, "string");
+        assertEquals(baseline, baseline);
 
         assertBookingNotEquals(b -> b.setBookingId("DIFF"));
         assertBookingNotEquals(b -> b.setTripType(TripType.ROUND_TRIP));
@@ -131,7 +131,7 @@ class ModelEqualityTest {
         Passenger base = fullPassenger();
         Passenger same = fullPassenger();
         assertEquals(base, same);
-        assertTrue(base.equals(base));
+        assertEquals(base, base);
 
         assertPassengerNotEquals(p -> p.setPassengerId("DIFF"));
         assertPassengerNotEquals(p -> p.setBookingId("B2"));
@@ -159,7 +159,7 @@ class ModelEqualityTest {
         BookingEvent base = fullBookingEvent();
         BookingEvent same = fullBookingEvent();
         assertEquals(base, same);
-        assertTrue(base.equals(base));
+        assertEquals(base, base);
 
         assertBookingEventNotEquals(e -> e.setEventType(BookingEventType.CANCELLED));
         assertBookingEventNotEquals(e -> e.setBookingId("DIFF"));
