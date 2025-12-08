@@ -92,4 +92,86 @@ class JwtAuthenticationFilterTest {
         assertThat(authRef.get()).isNotNull();
         assertThat(authRef.get().getAuthorities()).extracting("authority").contains("ROLE_ADMIN");
     }
+
+    @Test
+    void publicFlightEndpointsBypassAuth() {
+        MockServerWebExchange getExchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/flight/api/flight/getAllFlights").build());
+        MockServerWebExchange postExchange = MockServerWebExchange.from(
+                MockServerHttpRequest.post("/flight/api/flight/search").build());
+        AtomicBoolean getCalled = new AtomicBoolean(false);
+        AtomicBoolean postCalled = new AtomicBoolean(false);
+        WebFilterChain chain = e -> {
+            if ("/flight/api/flight/getAllFlights".equals(e.getRequest().getPath().toString())) {
+                getCalled.set(true);
+            } else if ("/flight/api/flight/search".equals(e.getRequest().getPath().toString())) {
+                postCalled.set(true);
+            }
+            return Mono.empty();
+        };
+
+        StepVerifier.create(filter.filter(getExchange, chain)).verifyComplete();
+        StepVerifier.create(filter.filter(postExchange, chain)).verifyComplete();
+        assertThat(getCalled).isTrue();
+        assertThat(postCalled).isTrue();
+    }
+
+    @Test
+    void tokenWithoutRoleClaimIsUnauthorized() {
+        String token = io.jsonwebtoken.Jwts.builder()
+                .setSubject("bob")
+                .setIssuedAt(new java.util.Date())
+                .setExpiration(new java.util.Date(System.currentTimeMillis() + 3600_000))
+                .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor("01234567890123456789012345678901".getBytes()), io.jsonwebtoken.SignatureAlgorithm.HS256)
+                .compact();
+
+        MockServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/secure")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build());
+
+        StepVerifier.create(filter.filter(exchange, e -> Mono.empty())).verifyComplete();
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void tokenWithInvalidRoleIsUnauthorized() {
+        String token = io.jsonwebtoken.Jwts.builder()
+                .setSubject("bob")
+                .claim("role", "NOT_A_ROLE")
+                .setIssuedAt(new java.util.Date())
+                .setExpiration(new java.util.Date(System.currentTimeMillis() + 3600_000))
+                .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor("01234567890123456789012345678901".getBytes()), io.jsonwebtoken.SignatureAlgorithm.HS256)
+                .compact();
+
+        MockServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/secure")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build());
+
+        StepVerifier.create(filter.filter(exchange, e -> Mono.empty())).verifyComplete();
+        assertThat(exchange.getResponse().getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    void tokenWithRoleWithoutPrefixIsAccepted() {
+        String token = io.jsonwebtoken.Jwts.builder()
+                .setSubject("alice")
+                .claim("role", "ADMIN") // should be normalized to ROLE_ADMIN
+                .setIssuedAt(new java.util.Date())
+                .setExpiration(new java.util.Date(System.currentTimeMillis() + 3600_000))
+                .signWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor("01234567890123456789012345678901".getBytes()), io.jsonwebtoken.SignatureAlgorithm.HS256)
+                .compact();
+
+        MockServerWebExchange exchange = MockServerWebExchange.from(
+                MockServerHttpRequest.get("/secure").build());
+        exchange.getRequest().mutate().header(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+
+        AtomicReference<Authentication> authRef = new AtomicReference<>();
+        WebFilterChain chain = e -> ReactiveSecurityContextHolder.getContext()
+                .doOnNext(ctx -> authRef.set(ctx.getAuthentication()))
+                .then();
+
+        StepVerifier.create(filter.filter(exchange, chain)).verifyComplete();
+        assertThat(authRef.get()).isNotNull();
+        assertThat(authRef.get().getAuthorities()).extracting("authority").contains("ROLE_ADMIN");
+    }
 }
