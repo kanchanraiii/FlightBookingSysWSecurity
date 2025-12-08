@@ -41,7 +41,7 @@ public class FlightService {
     public Mono<Map<String, String>> addInventory(AddFlightRequest req) {
 
         return validateRequest(req)
-                .then(validateDates(req))
+                .then(Mono.defer(() -> validateDates(req)))
                 .then(
                     airlineRepository.findById(req.getAirlineCode())
                         .switchIfEmpty(Mono.error(
@@ -49,7 +49,7 @@ public class FlightService {
                         ))
                 )
                 .then(checkDuplicateFlight(req))
-                .switchIfEmpty(createInventory(req))     
+                .switchIfEmpty(Mono.defer(() -> createInventory(req)))
                 .map(saved ->
                     Map.of("flightId", saved.getFlightId())
                 );

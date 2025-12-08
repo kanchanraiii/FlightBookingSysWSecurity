@@ -101,6 +101,42 @@ class ServiceLayerTest {
     }
 
     @Test
+    void addAirline_nullCode() {
+        addAirlineRequest.setAirlineCode(null);
+
+        StepVerifier.create(airlineService.addAirline(addAirlineRequest))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void addAirline_codeTooLong() {
+        addAirlineRequest.setAirlineCode("TOOLONG");
+
+        StepVerifier.create(airlineService.addAirline(addAirlineRequest))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void addAirline_missingName() {
+        addAirlineRequest.setAirlineName("  ");
+
+        StepVerifier.create(airlineService.addAirline(addAirlineRequest))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void addAirline_nullName() {
+        addAirlineRequest.setAirlineName(null);
+
+        StepVerifier.create(airlineService.addAirline(addAirlineRequest))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
     void getAllAirlines() {
         when(airlineRepository.findAll()).thenReturn(Flux.just(new Airline()));
 
