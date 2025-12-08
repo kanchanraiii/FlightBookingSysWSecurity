@@ -1,20 +1,23 @@
 package com.apigateway.security;
 
-import io.jsonwebtoken.Claims;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
 
-import java.util.List;
+import com.apigateway.model.Role;
+
+import io.jsonwebtoken.Claims;
+import reactor.core.publisher.Mono;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
@@ -27,8 +30,6 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         String path = exchange.getRequest().getPath().toString();
         HttpMethod method = exchange.getRequest().getMethod();
-
-        System.out.println("🔍 Incoming Path = " + path);
 
         // Public routes (no auth required)
         if (isPublic(path, method)) {
@@ -49,18 +50,24 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         // Extract claims
         Claims claims = jwtUtil.extractClaims(token);
-        String role = claims.get("role", String.class);
-        if (role == null) {
+        String roleClaim = claims.get("role", String.class);
+        if (roleClaim == null) {
             return unauthorized(exchange);
         }
 
-        String normalizedRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+        Role resolvedRole;
+        try {
+            String normalizedRole = roleClaim.startsWith("ROLE_") ? roleClaim : "ROLE_" + roleClaim;
+            resolvedRole = Role.valueOf(normalizedRole);
+        } catch (IllegalArgumentException ex) {
+            return unauthorized(exchange);
+        }
 
         return chain.filter(exchange)
                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(
                         new UsernamePasswordAuthenticationToken(
                                 claims.getSubject(), null,
-                                List.of(new SimpleGrantedAuthority(normalizedRole))
+                                List.of(new SimpleGrantedAuthority(resolvedRole.name()))
                         )
                 ));
     }
@@ -82,11 +89,6 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     private Mono<Void> unauthorized(ServerWebExchange exchange) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-        return exchange.getResponse().setComplete();
-    }
-
-    private Mono<Void> forbidden(ServerWebExchange exchange) {
-        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
         return exchange.getResponse().setComplete();
     }
 }
