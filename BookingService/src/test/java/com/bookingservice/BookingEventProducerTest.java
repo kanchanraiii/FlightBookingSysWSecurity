@@ -7,8 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -33,7 +31,7 @@ class BookingEventProducerTest {
                 CompletableFuture.completedFuture(
                         new SendResult<>(
                                 new org.apache.kafka.clients.producer.ProducerRecord<>("booking-events", new BookingEvent()),
-                                new RecordMetadata(new TopicPartition("booking-events", 0), 0L, 0L, 0L, 0L, 0, 0)));
+                                null));
 
         when(kafkaTemplate.send(any(), any())).thenReturn(future);
 

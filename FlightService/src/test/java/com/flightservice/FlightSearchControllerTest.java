@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-import com.flightservice.controller.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import com.flightservice.controller.MainController;
@@ -48,4 +47,3 @@ class FlightSearchControllerTests {
                 .verifyComplete();
     }
 }
-

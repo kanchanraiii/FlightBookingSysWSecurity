@@ -3,7 +3,6 @@ package com.bookingservice.exceptions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.format.DateTimeParseException;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

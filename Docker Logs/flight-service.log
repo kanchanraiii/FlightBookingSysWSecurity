@@ -1,0 +1,261 @@
+2025-12-08T17:47:37.561225436Z 17:47:37.550 [main] ERROR org.springframework.boot.SpringApplication -- Application run failed
+2025-12-08T17:47:37.561443186Z org.springframework.cloud.config.client.ConfigClientFailFastException: Could not locate PropertySource and the resource is not optional, failing
+2025-12-08T17:47:37.561466346Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:201)
+2025-12-08T17:47:37.561473667Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:102)
+2025-12-08T17:47:37.561478685Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:61)
+2025-12-08T17:47:37.561483345Z 	at org.springframework.boot.context.config.ConfigDataLoaders.load(ConfigDataLoaders.java:96)
+2025-12-08T17:47:37.561487956Z 	at org.springframework.boot.context.config.ConfigDataImporter.load(ConfigDataImporter.java:132)
+2025-12-08T17:47:37.561492335Z 	at org.springframework.boot.context.config.ConfigDataImporter.resolveAndLoad(ConfigDataImporter.java:87)
+2025-12-08T17:47:37.561496684Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentContributors.withProcessedImports(ConfigDataEnvironmentContributors.java:115)
+2025-12-08T17:47:37.561501451Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processInitial(ConfigDataEnvironment.java:242)
+2025-12-08T17:47:37.561505720Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processAndApply(ConfigDataEnvironment.java:229)
+2025-12-08T17:47:37.561510411Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:96)
+2025-12-08T17:47:37.561514979Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:89)
+2025-12-08T17:47:37.561519467Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEnvironmentPreparedEvent(EnvironmentPostProcessorApplicationListener.java:109)
+2025-12-08T17:47:37.561524530Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEvent(EnvironmentPostProcessorApplicationListener.java:94)
+2025-12-08T17:47:37.561528955Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+2025-12-08T17:47:37.561537945Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+2025-12-08T17:47:37.561542694Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+2025-12-08T17:47:37.561547305Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+2025-12-08T17:47:37.561551612Z 	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+2025-12-08T17:47:37.561556072Z 	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+2025-12-08T17:47:37.561579934Z 	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+2025-12-08T17:47:37.561585928Z 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+2025-12-08T17:47:37.561590426Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+2025-12-08T17:47:37.561594836Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+2025-12-08T17:47:37.561655937Z 	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+2025-12-08T17:47:37.561666700Z 	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:369)
+2025-12-08T17:47:37.561673031Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:329)
+2025-12-08T17:47:37.561677437Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+2025-12-08T17:47:37.561681808Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+2025-12-08T17:47:37.561686289Z 	at com.flightservice.FlightServiceApplication.main(FlightServiceApplication.java:12)
+2025-12-08T17:47:37.561690858Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+2025-12-08T17:47:37.561695143Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+2025-12-08T17:47:37.561699539Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+2025-12-08T17:47:37.561703843Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+2025-12-08T17:47:37.561708103Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+2025-12-08T17:47:37.561713937Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+2025-12-08T17:47:37.561718212Z 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+2025-12-08T17:47:37.561722430Z Caused by: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused
+2025-12-08T17:47:37.561727509Z 	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+2025-12-08T17:47:37.561731752Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+2025-12-08T17:47:37.561736180Z 	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+2025-12-08T17:47:37.561740247Z 	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+2025-12-08T17:47:37.561744454Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.getRemoteEnvironment(ConfigServerConfigDataLoader.java:330)
+2025-12-08T17:47:37.561748914Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:119)
+2025-12-08T17:47:37.561768141Z 	... 35 common frames omitted
+2025-12-08T17:47:37.561773205Z Caused by: java.net.ConnectException: Connection refused
+2025-12-08T17:47:37.561778969Z 	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+2025-12-08T17:47:37.561783496Z 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+2025-12-08T17:47:37.561787728Z 	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+2025-12-08T17:47:37.561791747Z 	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+2025-12-08T17:47:37.561796163Z 	at java.base/java.net.Socket.connect(Socket.java:633)
+2025-12-08T17:47:37.561800249Z 	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+2025-12-08T17:47:37.561804522Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+2025-12-08T17:47:37.561809065Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+2025-12-08T17:47:37.561813736Z 	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+2025-12-08T17:47:37.561818455Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+2025-12-08T17:47:37.561822983Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+2025-12-08T17:47:37.561827693Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+2025-12-08T17:47:37.561832405Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+2025-12-08T17:47:37.561836847Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+2025-12-08T17:47:37.561842997Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+2025-12-08T17:47:37.561847866Z 	at org.springframework.http.client.SimpleClientHttpRequest.executeInternal(SimpleClientHttpRequest.java:79)
+2025-12-08T17:47:37.561852435Z 	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+2025-12-08T17:47:37.561857076Z 	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+2025-12-08T17:47:37.561861577Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+2025-12-08T17:47:37.561866198Z 	... 39 common frames omitted
+2025-12-08T17:47:47.605682745Z 17:47:47.598 [main] ERROR org.springframework.boot.SpringApplication -- Application run failed
+2025-12-08T17:47:47.605736946Z org.springframework.cloud.config.client.ConfigClientFailFastException: Could not locate PropertySource and the resource is not optional, failing
+2025-12-08T17:47:47.605744587Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:201)
+2025-12-08T17:47:47.605749596Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:102)
+2025-12-08T17:47:47.605846415Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:61)
+2025-12-08T17:47:47.605857402Z 	at org.springframework.boot.context.config.ConfigDataLoaders.load(ConfigDataLoaders.java:96)
+2025-12-08T17:47:47.605860607Z 	at org.springframework.boot.context.config.ConfigDataImporter.load(ConfigDataImporter.java:132)
+2025-12-08T17:47:47.605862848Z 	at org.springframework.boot.context.config.ConfigDataImporter.resolveAndLoad(ConfigDataImporter.java:87)
+2025-12-08T17:47:47.605865095Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentContributors.withProcessedImports(ConfigDataEnvironmentContributors.java:115)
+2025-12-08T17:47:47.605867580Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processInitial(ConfigDataEnvironment.java:242)
+2025-12-08T17:47:47.605869903Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processAndApply(ConfigDataEnvironment.java:229)
+2025-12-08T17:47:47.605872149Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:96)
+2025-12-08T17:47:47.605874424Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:89)
+2025-12-08T17:47:47.605876747Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEnvironmentPreparedEvent(EnvironmentPostProcessorApplicationListener.java:109)
+2025-12-08T17:47:47.605879104Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEvent(EnvironmentPostProcessorApplicationListener.java:94)
+2025-12-08T17:47:47.605881378Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+2025-12-08T17:47:47.605887003Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+2025-12-08T17:47:47.605889389Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+2025-12-08T17:47:47.605891652Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+2025-12-08T17:47:47.605893889Z 	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+2025-12-08T17:47:47.605896134Z 	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+2025-12-08T17:47:47.605898392Z 	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+2025-12-08T17:47:47.605900653Z 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+2025-12-08T17:47:47.605902810Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+2025-12-08T17:47:47.605913314Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+2025-12-08T17:47:47.605916300Z 	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+2025-12-08T17:47:47.605918617Z 	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:369)
+2025-12-08T17:47:47.605922496Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:329)
+2025-12-08T17:47:47.605924635Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+2025-12-08T17:47:47.605926750Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+2025-12-08T17:47:47.605928845Z 	at com.flightservice.FlightServiceApplication.main(FlightServiceApplication.java:12)
+2025-12-08T17:47:47.605930952Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+2025-12-08T17:47:47.605933137Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+2025-12-08T17:47:47.605935497Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+2025-12-08T17:47:47.605937680Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+2025-12-08T17:47:47.605939841Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+2025-12-08T17:47:47.605942945Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+2025-12-08T17:47:47.605945400Z 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+2025-12-08T17:47:47.605947692Z Caused by: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused
+2025-12-08T17:47:47.605950172Z 	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+2025-12-08T17:47:47.605952343Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+2025-12-08T17:47:47.605954829Z 	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+2025-12-08T17:47:47.605956934Z 	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+2025-12-08T17:47:47.605959093Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.getRemoteEnvironment(ConfigServerConfigDataLoader.java:330)
+2025-12-08T17:47:47.605961402Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:119)
+2025-12-08T17:47:47.605963623Z 	... 35 common frames omitted
+2025-12-08T17:47:47.605965736Z Caused by: java.net.ConnectException: Connection refused
+2025-12-08T17:47:47.605967816Z 	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+2025-12-08T17:47:47.605969904Z 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+2025-12-08T17:47:47.605971953Z 	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+2025-12-08T17:47:47.605978368Z 	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+2025-12-08T17:47:47.605980855Z 	at java.base/java.net.Socket.connect(Socket.java:633)
+2025-12-08T17:47:47.605982935Z 	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+2025-12-08T17:47:47.605985038Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+2025-12-08T17:47:47.605987171Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+2025-12-08T17:47:47.605989798Z 	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+2025-12-08T17:47:47.605992416Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+2025-12-08T17:47:47.605994533Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+2025-12-08T17:47:47.605996926Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+2025-12-08T17:47:47.605999132Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+2025-12-08T17:47:47.606001455Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+2025-12-08T17:47:47.606004227Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+2025-12-08T17:47:47.606006476Z 	at org.springframework.http.client.SimpleClientHttpRequest.executeInternal(SimpleClientHttpRequest.java:79)
+2025-12-08T17:47:47.606008683Z 	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+2025-12-08T17:47:47.606010943Z 	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+2025-12-08T17:47:47.606013306Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+2025-12-08T17:47:47.606015515Z 	... 39 common frames omitted
+2025-12-08T17:47:57.076355049Z 17:47:57.061 [main] ERROR org.springframework.boot.SpringApplication -- Application run failed
+2025-12-08T17:47:57.076416404Z org.springframework.cloud.config.client.ConfigClientFailFastException: Could not locate PropertySource and the resource is not optional, failing
+2025-12-08T17:47:57.076424270Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:201)
+2025-12-08T17:47:57.076429063Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:102)
+2025-12-08T17:47:57.076433079Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:61)
+2025-12-08T17:47:57.076436910Z 	at org.springframework.boot.context.config.ConfigDataLoaders.load(ConfigDataLoaders.java:96)
+2025-12-08T17:47:57.076440463Z 	at org.springframework.boot.context.config.ConfigDataImporter.load(ConfigDataImporter.java:132)
+2025-12-08T17:47:57.081120939Z 	at org.springframework.boot.context.config.ConfigDataImporter.resolveAndLoad(ConfigDataImporter.java:87)
+2025-12-08T17:47:57.081158106Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentContributors.withProcessedImports(ConfigDataEnvironmentContributors.java:115)
+2025-12-08T17:47:57.081162827Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processInitial(ConfigDataEnvironment.java:242)
+2025-12-08T17:47:57.081165761Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processAndApply(ConfigDataEnvironment.java:229)
+2025-12-08T17:47:57.081168543Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:96)
+2025-12-08T17:47:57.081171625Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:89)
+2025-12-08T17:47:57.081174388Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEnvironmentPreparedEvent(EnvironmentPostProcessorApplicationListener.java:109)
+2025-12-08T17:47:57.081177025Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEvent(EnvironmentPostProcessorApplicationListener.java:94)
+2025-12-08T17:47:57.081179433Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185)
+2025-12-08T17:47:57.081189934Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178)
+2025-12-08T17:47:57.081192666Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156)
+2025-12-08T17:47:57.081195907Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138)
+2025-12-08T17:47:57.081198516Z 	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136)
+2025-12-08T17:47:57.081200945Z 	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81)
+2025-12-08T17:47:57.081203386Z 	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64)
+2025-12-08T17:47:57.081205727Z 	at java.base/java.lang.Iterable.forEach(Iterable.java:75)
+2025-12-08T17:47:57.081207989Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118)
+2025-12-08T17:47:57.081210321Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112)
+2025-12-08T17:47:57.081212680Z 	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63)
+2025-12-08T17:47:57.081215128Z 	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:369)
+2025-12-08T17:47:57.081217777Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:329)
+2025-12-08T17:47:57.081243684Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354)
+2025-12-08T17:47:57.081249484Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343)
+2025-12-08T17:47:57.081251950Z 	at com.flightservice.FlightServiceApplication.main(FlightServiceApplication.java:12)
+2025-12-08T17:47:57.081254281Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+2025-12-08T17:47:57.081256538Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+2025-12-08T17:47:57.081258774Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+2025-12-08T17:47:57.081375180Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+2025-12-08T17:47:57.081445564Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91)
+2025-12-08T17:47:57.081452831Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53)
+2025-12-08T17:47:57.081455923Z 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58)
+2025-12-08T17:47:57.081458597Z Caused by: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused
+2025-12-08T17:47:57.081461451Z 	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915)
+2025-12-08T17:47:57.081464010Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895)
+2025-12-08T17:47:57.081466324Z 	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790)
+2025-12-08T17:47:57.081469269Z 	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672)
+2025-12-08T17:47:57.081471609Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.getRemoteEnvironment(ConfigServerConfigDataLoader.java:330)
+2025-12-08T17:47:57.081531005Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:119)
+2025-12-08T17:47:57.081536532Z 	... 35 common frames omitted
+2025-12-08T17:47:57.081539658Z Caused by: java.net.ConnectException: Connection refused
+2025-12-08T17:47:57.081542237Z 	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+2025-12-08T17:47:57.081544609Z 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+2025-12-08T17:47:57.081546939Z 	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+2025-12-08T17:47:57.081549257Z 	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+2025-12-08T17:47:57.081551425Z 	at java.base/java.net.Socket.connect(Socket.java:633)
+2025-12-08T17:47:57.081553824Z 	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+2025-12-08T17:47:57.081556306Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+2025-12-08T17:47:57.081717845Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+2025-12-08T17:47:57.081730424Z 	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+2025-12-08T17:47:57.081733950Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+2025-12-08T17:47:57.081736605Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+2025-12-08T17:47:57.081738967Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+2025-12-08T17:47:57.081741340Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+2025-12-08T17:47:57.081743955Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+2025-12-08T17:47:57.081750610Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+2025-12-08T17:47:57.081753895Z 	at org.springframework.http.client.SimpleClientHttpRequest.executeInternal(SimpleClientHttpRequest.java:79)
+2025-12-08T17:47:57.081756675Z 	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70)
+2025-12-08T17:47:57.081759425Z 	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66)
+2025-12-08T17:47:57.081761851Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889)
+2025-12-08T17:47:57.081764271Z 	... 39 common frames omitted
+2025-12-08T17:48:08.718206971Z 
+2025-12-08T17:48:08.718278878Z   .   ____          _            __ _ _
+2025-12-08T17:48:08.718290298Z  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+2025-12-08T17:48:08.718295744Z ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+2025-12-08T17:48:08.718300696Z  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+2025-12-08T17:48:08.718305228Z   '  |____| .__|_| |_|_| |_\__, | / / / /
+2025-12-08T17:48:08.718309930Z  =========|_|==============|___/=/_/_/_/
+2025-12-08T17:48:08.723328022Z  :: Spring Boot ::                (v3.2.5)
+2025-12-08T17:48:08.723390897Z 
+2025-12-08T17:48:09.146507429Z 2025-12-08T17:48:09.133Z  INFO 1 --- [flight-service] [           main] c.f.FlightServiceApplication             : Starting FlightServiceApplication v0.0.1-SNAPSHOT using Java 17.0.17 with PID 1 (/app/app.jar started by root in /app)
+2025-12-08T17:48:09.148316292Z 2025-12-08T17:48:09.147Z  INFO 1 --- [flight-service] [           main] c.f.FlightServiceApplication             : No active profile set, falling back to 1 default profile: "default"
+2025-12-08T17:48:09.425108941Z 2025-12-08T17:48:09.424Z  INFO 1 --- [flight-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:09.425149657Z 2025-12-08T17:48:09.424Z  INFO 1 --- [flight-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=application, profiles=[default], label=null, version=2b6f201cbb3450a200afa9398fd1f1ad98ce7951, state=null
+2025-12-08T17:48:09.425728068Z 2025-12-08T17:48:09.425Z  INFO 1 --- [flight-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:09.425751531Z 2025-12-08T17:48:09.425Z  INFO 1 --- [flight-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=flight-service, profiles=[default], label=null, version=2b6f201cbb3450a200afa9398fd1f1ad98ce7951, state=null
+2025-12-08T17:48:12.581818977Z 2025-12-08T17:48:12.581Z  INFO 1 --- [flight-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2025-12-08T17:48:12.982883774Z 2025-12-08T17:48:12.982Z  INFO 1 --- [flight-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 387 ms. Found 3 Reactive MongoDB repository interfaces.
+2025-12-08T17:48:13.011599162Z 2025-12-08T17:48:13.010Z  INFO 1 --- [flight-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-12-08T17:48:13.017397301Z 2025-12-08T17:48:13.016Z  INFO 1 --- [flight-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 MongoDB repository interfaces.
+2025-12-08T17:48:14.334255085Z 2025-12-08T17:48:14.331Z  INFO 1 --- [flight-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=7817c2e3-8acf-3ed4-b47e-0a1d75ada671
+2025-12-08T17:48:14.850403043Z 2025-12-08T17:48:14.846Z  WARN 1 --- [flight-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-12-08T17:48:14.852527759Z 2025-12-08T17:48:14.851Z  WARN 1 --- [flight-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-12-08T17:48:14.869142453Z 2025-12-08T17:48:14.868Z  WARN 1 --- [flight-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-12-08T17:48:14.877287909Z 2025-12-08T17:48:14.872Z  WARN 1 --- [flight-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-12-08T17:48:14.888132535Z 2025-12-08T17:48:14.887Z  WARN 1 --- [flight-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-12-08T17:48:17.601839389Z 2025-12-08T17:48:17.599Z  INFO 1 --- [flight-service] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|reactive-streams|spring-boot", "version": "4.11.2"}, "os": {"type": "Linux", "name": "Linux", "architecture": "amd64", "version": "6.6.87.2-microsoft-standard-WSL2"}, "platform": "Java/Eclipse Adoptium/17.0.17+10"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=NettyTransportSettings{eventLoopGroup=io.netty.channel.nio.NioEventLoopGroup@49b89425, socketChannelClass=null, allocator=null, sslContext=null}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@59328218, com.mongodb.Jep395RecordCodecProvider@5345dfe8, com.mongodb.KotlinCodecProvider@478967eb]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[mongodb:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2025-12-08T17:48:17.917596034Z 2025-12-08T17:48:17.911Z  INFO 1 --- [flight-service] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "4.11.2"}, "os": {"type": "Linux", "name": "Linux", "architecture": "amd64", "version": "6.6.87.2-microsoft-standard-WSL2"}, "platform": "Java/Eclipse Adoptium/17.0.17+10"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=NettyTransportSettings{eventLoopGroup=io.netty.channel.nio.NioEventLoopGroup@25c1f5ee, socketChannelClass=null, allocator=null, sslContext=null}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@59328218, com.mongodb.Jep395RecordCodecProvider@5345dfe8, com.mongodb.KotlinCodecProvider@478967eb]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[mongodb:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2025-12-08T17:48:18.890265980Z 2025-12-08T17:48:18.889Z  INFO 1 --- [flight-service] [}-mongodb:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=mongodb:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=27, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=878452698}
+2025-12-08T17:48:18.898933628Z 2025-12-08T17:48:18.898Z  INFO 1 --- [flight-service] [}-mongodb:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=mongodb:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=27, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=903795083}
+2025-12-08T17:48:26.600625818Z 2025-12-08T17:48:26.594Z  INFO 1 --- [flight-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2025-12-08T17:48:26.851999421Z 2025-12-08T17:48:26.850Z  WARN 1 --- [flight-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2025-12-08T17:48:27.003977309Z 2025-12-08T17:48:27.002Z  INFO 1 --- [flight-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2025-12-08T17:48:27.514292053Z 2025-12-08T17:48:27.507Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2025-12-08T17:48:27.559049135Z 2025-12-08T17:48:27.556Z  INFO 1 --- [flight-service] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-12-08T17:48:27.725851835Z 2025-12-08T17:48:27.724Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2025-12-08T17:48:27.727582970Z 2025-12-08T17:48:27.725Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2025-12-08T17:48:27.727672703Z 2025-12-08T17:48:27.726Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2025-12-08T17:48:27.727691530Z 2025-12-08T17:48:27.726Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2025-12-08T17:48:27.727703596Z 2025-12-08T17:48:27.726Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2025-12-08T17:48:27.727713994Z 2025-12-08T17:48:27.726Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2025-12-08T17:48:27.729915730Z 2025-12-08T17:48:27.727Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2025-12-08T17:48:29.210259999Z 2025-12-08T17:48:29.207Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2025-12-08T17:48:29.221368976Z 2025-12-08T17:48:29.220Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2025-12-08T17:48:29.248876936Z 2025-12-08T17:48:29.247Z  INFO 1 --- [flight-service] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2025-12-08T17:48:29.284659617Z 2025-12-08T17:48:29.283Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1765216109281 with initial instances count: 0
+2025-12-08T17:48:29.313435816Z 2025-12-08T17:48:29.306Z  INFO 1 --- [flight-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application FLIGHT-SERVICE with eureka with status UP
+2025-12-08T17:48:29.318343803Z 2025-12-08T17:48:29.316Z  INFO 1 --- [flight-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1765216109313, current=UP, previous=STARTING]
+2025-12-08T17:48:29.343737732Z 2025-12-08T17:48:29.342Z  INFO 1 --- [flight-service] [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FLIGHT-SERVICE/5131f644fdfd:flight-service:8090: registering service...
+2025-12-08T17:48:29.867295934Z 2025-12-08T17:48:29.862Z  INFO 1 --- [flight-service] [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_FLIGHT-SERVICE/5131f644fdfd:flight-service:8090 - registration status: 204
+2025-12-08T17:48:29.914759382Z 2025-12-08T17:48:29.914Z  INFO 1 --- [flight-service] [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port 8090
+2025-12-08T17:48:29.934928675Z 2025-12-08T17:48:29.928Z  INFO 1 --- [flight-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8090
+2025-12-08T17:48:30.054284503Z 2025-12-08T17:48:30.052Z  INFO 1 --- [flight-service] [           main] c.f.FlightServiceApplication             : Started FlightServiceApplication in 27.837 seconds (process running for 31.513)
+2025-12-08T17:48:59.185795374Z 2025-12-08T17:48:59.184Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2025-12-08T17:48:59.185897885Z 2025-12-08T17:48:59.185Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2025-12-08T17:48:59.185913041Z 2025-12-08T17:48:59.185Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2025-12-08T17:48:59.185921389Z 2025-12-08T17:48:59.185Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2025-12-08T17:48:59.186766667Z 2025-12-08T17:48:59.185Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2025-12-08T17:48:59.186792029Z 2025-12-08T17:48:59.185Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2025-12-08T17:48:59.186796780Z 2025-12-08T17:48:59.185Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2025-12-08T17:48:59.204192190Z 2025-12-08T17:48:59.203Z  INFO 1 --- [flight-service] [freshExecutor-0] com.netflix.discovery.DiscoveryClient    : The response status is 200

@@ -10,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,6 +85,8 @@ class BookingServiceTests {
         when(passengerRepository.deleteByBookingId(anyString())).thenReturn(Mono.empty());
         when(bookingRepository.deleteById(anyString())).thenReturn(Mono.empty());
         when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(anyString(), anyString(), anyInt()))
+                .thenReturn(Mono.just(false));
     }
 
     private PassengerRequest passenger(String name) {
@@ -131,15 +132,17 @@ class BookingServiceTests {
     @Test
     void bookFlight_missingPassengersThrows() {
         request.setPassengers(null);
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class,
+        org.junit.jupiter.api.Assertions.assertThrows(
+                ValidationException.class,
                 () -> bookingService.bookFlight("F1", request));
     }
 
     @Test
     void bookFlight_returnFlightMissingThrows() {
         request.setTripType(TripType.ROUND_TRIP);
-        org.junit.jupiter.api.Assertions.assertThrows(ValidationException.class,
-                () -> bookingService.bookFlight("F1", request).block());
+        org.junit.jupiter.api.Assertions.assertThrows(
+                ValidationException.class,
+                () -> bookingService.bookFlight("F1", request));
     }
 
     @Test
@@ -330,6 +333,44 @@ class BookingServiceTests {
 
         StepVerifier.create(bookingService.getHistory("a@b.com"))
                 .expectNextCount(1)
+                .verifyComplete();
+    }
+
+    @Test
+    void bookFlight_emailFailureAddsWarning() {
+        request.setPassengers(List.of(passenger("Warned")));
+        when(flightClient.getFlight("F1")).thenReturn(Mono.just(flightDto));
+        when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(bookingRepository.save(any())).thenAnswer(inv -> {
+            Booking b = inv.getArgument(0);
+            ReflectionTestUtils.setField(b, "bookingId", "BWARN");
+            return Mono.just(b);
+        });
+        when(emailService.sendBookingNotification(any(), any()))
+                .thenReturn(Mono.error(new RuntimeException("smtp down")));
+
+        StepVerifier.create(bookingService.bookFlight("F1", request))
+                .assertNext(b -> assertEquals(1, b.getWarnings().size()))
+                .verifyComplete();
+    }
+
+    @Test
+    void cancelTicket_kafkaDownAddsWarning() {
+        Booking booking = new Booking();
+        booking.setBookingId("B1");
+        booking.setOutboundFlightId("F1");
+        booking.setTotalPassengers(2);
+        booking.setStatus(BookingStatus.CONFIRMED);
+        when(bookingRepository.findByPnrOutbound("PNR-KAF")).thenReturn(Mono.just(booking));
+        when(bookingRepository.save(any())).thenReturn(Mono.just(booking));
+        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(eventProducer.publish(any())).thenReturn(Mono.just(false));
+
+        StepVerifier.create(bookingService.cancelTicket("PNR-KAF"))
+                .assertNext(map -> {
+                    assertEquals("Booking cancelled", map.get("message"));
+                    assertNotNull(map.get("warning"));
+                })
                 .verifyComplete();
     }
 }

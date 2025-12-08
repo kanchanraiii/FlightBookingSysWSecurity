@@ -90,6 +90,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
 
        
         <dependency>
@@ -135,6 +141,18 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
+                <configuration>
+                    <excludes>
+                        <!-- Lombok data holders; excluding to focus coverage on behavioral code -->
+                        <exclude>com/flightservice/model/**/*</exclude>
+                        <exclude>com/flightservice/request/**/*</exclude>
+                    </excludes>
+                    <reports>
+                        <xml enabled="true"/>
+                        <html enabled="true"/>
+                        <csv enabled="false"/>
+                    </reports>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
