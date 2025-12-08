@@ -1,0 +1,472 @@
+{
+	"info": {
+		"_postman_id": "71373aa0-123a-434a-bc2c-17bd1fd21c62",
+		"name": "Api Gateway - 9000",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28036272",
+		"_collection_link": "https://java-dev-5715.postman.co/workspace/Flight-Booking-Microservice~c887dc0e-a518-4a3c-834e-5df3ce130339/collection/28036272-71373aa0-123a-434a-bc2c-17bd1fd21c62?action=share&source=collection_link&creator=28036272"
+	},
+	"item": [
+		{
+			"name": "Signup & Login",
+			"item": [
+				{
+					"name": "Admin Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"admin3\",\n  \"password\": \"strongpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin3\",\r\n  \"password\": \"strongpass\",\r\n  \"fullName\": \"Admin User\",\r\n  \"email\": \"admin@example.com\",\r\n  \"role\": \"ROLE_ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"user1\",\n  \"password\": \"pass123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"user1\",\n  \"password\": \"strongpass\",\n  \"fullName\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"role\": \"ROLE_USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUBLIC Endpoints",
+			"item": [
+				{
+					"name": "Get All flights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api-gate-base}}/flight/api/flight/getAllFlights",
+							"host": [
+								"{{api-gate-base}}"
+							],
+							"path": [
+								"flight",
+								"api",
+								"flight",
+								"getAllFlights"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Flights",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sourceCity\": \"DELHI\",\n  \"destinationCity\": \"KOCHI\",\n  \"travelDate\": \"2025-12-06\",\n  \"tripType\": \"ONE_WAY\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api-gate-base}}/flight/api/flight/search",
+							"host": [
+								"{{api-gate-base}}"
+							],
+							"path": [
+								"flight",
+								"api",
+								"flight",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Airlines",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/flight/api/flight/getAllAirlines",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"flight",
+								"api",
+								"flight",
+								"getAllAirlines"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ADMIN Endpoints",
+			"item": [
+				{
+					"name": "Add a flight",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjMiLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc2NTE3MTc5MCwiZXhwIjoxNzY1MTc1MzkwfQ.2pq9W9UU_4JIDhkCdCtJIBxmf_wE44x7UUQFYYayq8c",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"airlineCode\": \"MA\",\n  \"flightNumber\": \"AI103\",\n  \"sourceCity\": \"DELHI\",\n  \"destinationCity\": \"MUMBAI\",\n  \"departureDate\": \"2025-12-05\",\n  \"departureTime\": \"10:30\",\n  \"arrivalDate\": \"2025-12-05\",\n  \"arrivalTime\": \"12:45\",\n  \"totalSeats\": 180,\n  \"price\": 5200,\n  \"mealAvailable\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api-gate-base}}/flight/api/flight/airline/inventory/add",
+							"host": [
+								"{{api-gate-base}}"
+							],
+							"path": [
+								"flight",
+								"api",
+								"flight",
+								"airline",
+								"inventory",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add an airline",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjIiLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc2NTEzMjgxOSwiZXhwIjoxNzY1MTM2NDE5fQ.rTMYWYTH-mW2MGmwKVYk-xWRwKnMkjscFh_A2o6dBU4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"airlineCode\": \"INDG\",\n  \"airlineName\": \"Indigo\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/flight/api/flight/addAirline",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"flight",
+								"api",
+								"flight",
+								"addAirline"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER Endpoints",
+			"item": [
+				{
+					"name": "Book a flight - ROUND TRIP",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NjUxNzIzMDksImV4cCI6MTc2NTE3NTkwOX0.8LK1C8D8iQfwSHj6MToc20LE81Dy3kP4pJ8NfhDVLnA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tripType\": \"ROUND_TRIP\",\n  \"returnFlightId\": \"RETURN_FLIGHT_ID\",\n  \"contactName\": \"Kanchan\",\n  \"contactEmail\": \"k@example.com\",\n  \"passengers\": [\n    {\n      \"name\": \"Rahul\",\n      \"age\": 26,\n      \"gender\": \"MALE\",\n      \"seatOutbound\": \"S1\",\n      \"seatReturn\": \"S2\"\n    }\n  ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/booking/api/booking/692c3dd7ccf32cc859067439",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"booking",
+								"api",
+								"booking",
+								"692c3dd7ccf32cc859067439"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Book a flight - ONE WAY",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIsInJvbGUiOiJST0xFX1VTRVIiLCJpYXQiOjE3NjUxNzQwODMsImV4cCI6MTc2NTE3NzY4M30.cJOgZQ5V_iPaqtCxhErqIP-01grh4ELnEYnnIDTjll4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"tripType\": \"ONE_WAY\",\n  \"contactName\": \"Kanchan\",\n  \"contactEmail\": \"rajatrajputdev@gmail.com\",\n  \"passengers\": [\n    {\n      \"name\": \"Rahul\",\n      \"age\": 26,\n      \"gender\": \"MALE\",\n      \"seatOutbound\": \"S1\"\n    }\n  ]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/booking/api/booking/692dab388a892f0a346cd92a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"booking",
+								"api",
+								"booking",
+								"692dab388a892f0a346cd92a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel a booking  by pnr",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api-gate-base}}/booking/api/booking/cancel/6ADB70",
+							"host": [
+								"{{api-gate-base}}"
+							],
+							"path": [
+								"booking",
+								"api",
+								"booking",
+								"cancel",
+								"6ADB70"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "USER + ADMIN Endpoints",
+			"item": [
+				{
+					"name": "Get ticket by pnr",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbjMiLCJyb2xlIjoiUk9MRV9BRE1JTiIsImlhdCI6MTc2NTE3NDc1NCwiZXhwIjoxNzY1MTc4MzU0fQ.Z2X8EzMU_Focqs8vzjzg_fg5smyOBpcmXUsUT9fd5dk",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/booking/api/booking/ticket/C3F294",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"booking",
+								"api",
+								"booking",
+								"ticket",
+								"C3F294"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Booking history by email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api-gate-base}}/booking/api/booking/history/k@example.com",
+							"host": [
+								"{{api-gate-base}}"
+							],
+							"path": [
+								"booking",
+								"api",
+								"booking",
+								"history",
+								"k@example.com"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
