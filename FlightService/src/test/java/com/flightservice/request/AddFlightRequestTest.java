@@ -69,10 +69,10 @@ class AddFlightRequestTest {
         b.setPrice(300f);
         b.setMealAvailable(true);
 
-        assertEquals(a, b);
+        assertEquals(b, a);
         assertEquals(a.hashCode(), b.hashCode());
-        assertNotEquals(a, null);
-        assertNotEquals(a, "string");
+        assertNotEquals(null, a);
+        assertNotEquals("string", a);
         b.setFlightNumber("DIFF");
         assertNotEquals(a, b);
         // flip each field to hit every Lombok equals condition
