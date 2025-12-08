@@ -1,55 +1,80 @@
-# Flight Booking System – Gateway Security & Container Topology
+# Flight Booking System – Gateway Security & Docker Containerization
 
-This document summarizes how the API Gateway secures traffic with JWT and how the Docker composition wires all services together. It is descriptive only—no run commands are included.
+This project is a fully containerized Flight Booking microservices system secured with JWT-based authentication and role-based authorization (Admin/User).
+All services - API Gateway, Eureka Server, Config Server, Flight Service, Booking Service, Kafka, and MongoDB- run in isolated Docker containers orchestrated using a single Docker Compose setup.
+The API Gateway enforces security filters, validates JWT tokens, and controls access to protected endpoints.
+Spring Cloud Config externalizes configuration, while Eureka enables dynamic service discovery across containers.
 
-## API Gateway JWT Security Model
-**What the token contains**
-- HMAC-SHA256 JWT signed with a shared secret (`jwt.secret`) and an expiry (`jwt.expiration`, milliseconds).
-- Claims: `sub` (username) and `role` (backed by the `Role` enum).
 
-**How tokens are issued**
-- `AuthController` calls `JwtUtil.generateToken(username, role)` to mint tokens with issued-at and expiration timestamps.
+[View Summary Document](https://github.com/kanchanraiii/FlightBookingSysWSecurity/blob/main/Project%20Summary%20Doc.pdf)
 
-**How requests are authenticated**
-- `JwtAuthenticationFilter` inspects `Authorization: Bearer <token>` on every request except whitelisted paths.
-- Signature/expiry are verified via `JwtUtil.isValid` and `JwtUtil.extractClaims`.
-- The `role` claim is normalized (adds `ROLE_` prefix if missing), mapped to `Role`, and inserted into the reactive security context as a `SimpleGrantedAuthority`.
+---
 
-**Route protection**
-- Public: `/auth/**`, `/api/auth/**`, read/search flight catalogue endpoints, and POST search.
-- Admin-only: add airline and add inventory.
-- User-only: booking POST and cancel.
-- User/Admin: ticket lookup and booking history.
-- Everything else requires authentication.
+## System Architecture
 
-**Failure behavior**
-- Missing/invalid/expired tokens or unknown roles return `401 Unauthorized` immediately—no downstream calls are made.
+The system architecture describes all the services, their connections, DBs, and overall layout.
 
-**Where secrets live**
-- `ApiGateway/src/main/resources/application.properties` defines `jwt.secret` and `jwt.expiration`; Config Server can also supply them via `SPRING_CONFIG_IMPORT`.
-- Gateway persistence: MongoDB database `apiGatewayDB` for user data.
+![System Architecture](System%20Architecture.drawio.png)
+---
 
-## Docker Composition Overview
-**Services and ports**
-- Config Server `config-server` (8888), Eureka `eureka-server` (8761), API Gateway `api-gateway` (9000), Flight Service `flight-service` (8090), Booking Service `booking-service` (8080), MongoDB `mongodb` (container 27017, exposed on host 27018), Kafka with Zookeeper (9092).
-- `depends_on` establishes startup order so config and discovery are available first.
+## Docker Containers Running
 
-**Discovery & configuration**
-- Each Spring Boot service imports config from `config-server:8888` and registers with `eureka-server:8761`.
-- `docker-compose.yml` wires `SPRING_CONFIG_IMPORT` and `EUREKA_CLIENT_SERVICEURL_DEFAULTZONE` so containers resolve peers by service name instead of localhost.
+On running the `docker-compose.yml` all other containers connected to it run successfully
 
-**Data layer**
-- MongoDB uses the `mongo_data` named volume to persist data across container recreations.
-- Services reach Mongo via the internal host `mongodb:27017` (host-side mapped to `27018` to avoid colliding with a local mongod).
+![Docker Containers Running](Docker%20Containers%20Running.png)
 
-**Networking**
-- All containers share the default compose network; they address each other by service name (`config-server`, `eureka-server`, `mongodb`, `kafka`, etc.).
-- Host access uses the published ports above; inside the network, containers communicate on their internal ports.
+---
 
-**Resilience**
-- `restart: on-failure` on gateway, flight-service, and booking-service helps them retry after transient config/Eureka startup delays.
+## All Services - Ports
 
-## Control Plane Notes
-- **Config repository**: The Config Server pulls configuration from the Git repo `ConfigServerFlightBooking.git` (branch `main`) as specified in its `application.properties`.
-- **JWT secret stewardship**: The symmetric key in `application.properties` is suitable for development only. For real deployments, supply it via environment variable or secret manager and avoid committing production keys.
-- **Trust boundaries**: The gateway is the single ingress for downstream services; JWT validation happens there. Downstream services still register with Eureka and can apply their own auth if needed, but the gateway is responsible for enforcing user/admin role checks at the edge.
+Below are all the services implemented in this project their ports and dependencies.
+
+| Service Name | Port (External) | Description | Dependencies |
+| :--- | :--- | :--- | :--- |
+| eureka-service | `8761` | Central service registry for all microservices. | Spring Cloud Eureka |
+| config-service | `8888` | Provides centralized configuration management to all services. | Spring Cloud Config |
+| api-gateway-service | `8000` | The single entry point for all client requests, handling routing, security, and load balancing. | Spring Cloud Gateway |
+| flight-service | `8081` | Manages all airline and flight inventory data (CRUD operations). | Spring Boot, MongoDB |
+| booking-service | `8082` | Handles flight reservation, ticket generation, and history tracking. | Spring Boot, MongoDB |
+
+---
+
+## All API Endpoints 
+Below are all the endpoints their HTTP method and access role.
+| Route | Method | Access |
+| :--- | :--- | :--- |
+| /api/auth/register | POST | Public |
+| /api/auth/login | POST | Public |
+| /flight/api/flight/getAllAirlines | GET | Public |
+| /flight/api/flight/getAllFlights | GET | Public |
+| /flight/api/flight/search | POST | Public |
+| /flight/api/flight/addAirline | POST | Admin |
+| /flight/api/flight/airline/inventory/add | POST | Admin |
+| /booking/api/booking/{flightId} | POST | User |
+| /booking/api/booking/ticket/{pnr} | GET | User + Admin |
+| /booking/api/booking/history/{email} | GET | User + Admin |
+| /booking/api/booking/cancel/{pnr} | DELETE | User |
+
+---
+
+## Things Implemented
+
+These are the features and implementations carried out in this project.
+
+- Dockerization of each service. Creating a single `docker-compose.yml` to run the containers
+- JMeter Load Testing with 20,50 and 100 Threads
+- Unit testing
+- Sonar Cloud Analysis andCoverage
+- JWT Authentication with Spring Security for Admin and User Roles
+- Validations & Exception Handling 
+- Circuit Breaker and Open Feign
+- Apache Kafka Msg Broker when flights are booked/cancelled
+
+---
+
+## SonarQube
+Below is the SonarQube Report after fixing all the issues (29 Maintainibilty 15 Reliabilty).
+
+![SonarQube](https://github.com/kanchanraiii/FlightBookingSystemMicroservice/blob/main/After2.png)
+
+---

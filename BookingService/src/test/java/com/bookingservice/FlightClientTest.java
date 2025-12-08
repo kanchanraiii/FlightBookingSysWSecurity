@@ -17,7 +17,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bookingservice.client.FlightClient;
-import com.bookingservice.client.FlightDto;
 
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import reactor.core.publisher.Mono;

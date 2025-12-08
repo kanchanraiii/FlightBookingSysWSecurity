@@ -106,25 +106,20 @@ public class BookingService {
     private Mono<Booking> createBooking(BookingRequest req, String outboundId, String returnId) {
 
         return Flux.fromIterable(req.getPassengers())
-                .flatMap(p ->
-                        Mono.justOrEmpty(
-                                        bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(
-                                                outboundId,
-                                                p.getName(),
-                                                p.getAge()
-                                        )
-                                )
-                                .flatMap(boolMono -> boolMono)
-                                .defaultIfEmpty(false)
-                                .flatMap(exists -> {
-                                    if (exists) {
-                                        return Mono.error(new ValidationException(
-                                                "Passenger " + p.getName() + " is already booked on this flight"
-                                        ));
-                                    }
-                                    return Mono.empty();
-                                })
-                )
+                .flatMap(p -> bookingRepository
+                        .existsByOutboundFlightIdAndPassengersNameAndPassengersAge(
+                                outboundId,
+                                p.getName(),
+                                p.getAge()
+                        )
+                        .flatMap(exists -> {
+                            boolean alreadyBooked = Boolean.TRUE.equals(exists);
+                            return alreadyBooked
+                                    ? Mono.<Void>error(new ValidationException(
+                                            "Passenger " + p.getName() + " is already booked on this flight"
+                                    ))
+                                    : Mono.empty();
+                        }))
                 .then(Mono.defer(() -> {
 
                     Booking booking = new Booking();
@@ -282,11 +277,6 @@ public class BookingService {
                     }
                     return new SideEffectOutcome(kafkaOk, warnings);
                 });
-    }
-
-    private Mono<Booking> attachWarnings(Booking booking, SideEffectOutcome outcome) {
-        booking.setWarnings(outcome.warnings());
-        return Mono.just(booking);
     }
 
     private Map<String, String> responseWithWarnings(String baseMessage, java.util.List<String> warnings) {

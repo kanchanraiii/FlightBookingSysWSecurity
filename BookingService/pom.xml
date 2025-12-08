@@ -92,6 +92,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>io.projectreactor</groupId>
@@ -158,6 +164,13 @@
             </configuration>
         </execution>
     </executions>
+    <configuration>
+        <reports>
+            <xml enabled="true"/>
+            <html enabled="true"/>
+            <csv enabled="false"/>
+        </reports>
+    </configuration>
 </plugin>
 
             <plugin>

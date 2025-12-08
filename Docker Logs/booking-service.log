@@ -1,0 +1,232 @@
+2025-12-08T17:47:45.937527793Z 
+2025-12-08T17:47:45.937675952Z   .   ____          _            __ _ _
+2025-12-08T17:47:45.937690295Z  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+2025-12-08T17:47:45.937696732Z ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+2025-12-08T17:47:45.937701959Z  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+2025-12-08T17:47:45.937706897Z   '  |____| .__|_| |_|_| |_\__, | / / / /
+2025-12-08T17:47:45.937711426Z  =========|_|==============|___/=/_/_/_/
+2025-12-08T17:47:45.956057792Z  :: Spring Boot ::                (v3.2.5)
+2025-12-08T17:47:45.956121335Z 
+2025-12-08T17:47:47.272034341Z 2025-12-08T17:47:47.244Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.272990101Z 2025-12-08T17:47:47.272Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.276171963Z 2025-12-08T17:47:47.273Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.285721814Z 2025-12-08T17:47:47.285Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.286262503Z 2025-12-08T17:47:47.285Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.286937264Z 2025-12-08T17:47:47.286Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.287410100Z 2025-12-08T17:47:47.287Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.287902609Z 2025-12-08T17:47:47.287Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.288479488Z 2025-12-08T17:47:47.288Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.288826345Z 2025-12-08T17:47:47.288Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.291751045Z 2025-12-08T17:47:47.289Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.291804654Z 2025-12-08T17:47:47.289Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.291810298Z 2025-12-08T17:47:47.289Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:47:47.291813344Z 2025-12-08T17:47:47.289Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:47:47.965709923Z 2025-12-08T17:47:47.942Z ERROR 1 --- [booking-service] [           main] o.s.boot.SpringApplication               : Application run failed
+2025-12-08T17:47:47.965770008Z 
+2025-12-08T17:47:47.965774033Z org.springframework.cloud.config.client.ConfigClientFailFastException: Could not locate PropertySource and the resource is not optional, failing
+2025-12-08T17:47:47.965776066Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:201) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:47:47.965778820Z 	at org.springframework.cloud.config.client.ConfigClientRetryBootstrapper.lambda$initialize$1(ConfigClientRetryBootstrapper.java:54) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:47:47.965781459Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:92) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:47:47.965784035Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:61) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:47:47.965786202Z 	at org.springframework.boot.context.config.ConfigDataLoaders.load(ConfigDataLoaders.java:96) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965788254Z 	at org.springframework.boot.context.config.ConfigDataImporter.load(ConfigDataImporter.java:132) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965790000Z 	at org.springframework.boot.context.config.ConfigDataImporter.resolveAndLoad(ConfigDataImporter.java:87) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965791958Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentContributors.withProcessedImports(ConfigDataEnvironmentContributors.java:115) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965794046Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processInitial(ConfigDataEnvironment.java:242) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965822162Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processAndApply(ConfigDataEnvironment.java:229) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965824798Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:96) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965828659Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:89) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965830787Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEnvironmentPreparedEvent(EnvironmentPostProcessorApplicationListener.java:109) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965832684Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEvent(EnvironmentPostProcessorApplicationListener.java:94) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965834555Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965836647Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965838352Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965840406Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965842434Z 	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965844635Z 	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965846548Z 	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965848507Z 	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[na:na]
+2025-12-08T17:47:47.965850385Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965852062Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965854695Z 	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965856546Z 	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:369) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965858441Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:329) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965863309Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965865603Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:47:47.965867624Z 	at com.bookingservice.BookingServiceApplication.main(BookingServiceApplication.java:14) ~[!/:0.0.1-SNAPSHOT]
+2025-12-08T17:47:47.965869608Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+2025-12-08T17:47:47.965871540Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+2025-12-08T17:47:47.965873732Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+2025-12-08T17:47:47.965875629Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+2025-12-08T17:47:47.965877342Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91) ~[app.jar:0.0.1-SNAPSHOT]
+2025-12-08T17:47:47.965878982Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53) ~[app.jar:0.0.1-SNAPSHOT]
+2025-12-08T17:47:47.965880901Z 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58) ~[app.jar:0.0.1-SNAPSHOT]
+2025-12-08T17:47:47.965882874Z Caused by: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused
+2025-12-08T17:47:47.965884963Z 	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965886635Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965888265Z 	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965890361Z 	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965892124Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.getRemoteEnvironment(ConfigServerConfigDataLoader.java:330) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:47:47.965894779Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:119) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:47:47.965896593Z 	... 36 common frames omitted
+2025-12-08T17:47:47.965898204Z Caused by: java.net.ConnectException: Connection refused
+2025-12-08T17:47:47.965899997Z 	at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
+2025-12-08T17:47:47.965902126Z 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]
+2025-12-08T17:47:47.965903791Z 	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547) ~[na:na]
+2025-12-08T17:47:47.965905720Z 	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602) ~[na:na]
+2025-12-08T17:47:47.965918346Z 	at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
+2025-12-08T17:47:47.965920388Z 	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[na:na]
+2025-12-08T17:47:47.965922221Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533) ~[na:na]
+2025-12-08T17:47:47.965924231Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638) ~[na:na]
+2025-12-08T17:47:47.965925927Z 	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283) ~[na:na]
+2025-12-08T17:47:47.965928064Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386) ~[na:na]
+2025-12-08T17:47:47.965929707Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408) ~[na:na]
+2025-12-08T17:47:47.965931331Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329) ~[na:na]
+2025-12-08T17:47:47.965933377Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262) ~[na:na]
+2025-12-08T17:47:47.965935120Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148) ~[na:na]
+2025-12-08T17:47:47.965937406Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077) ~[na:na]
+2025-12-08T17:47:47.965939154Z 	at org.springframework.http.client.SimpleClientHttpRequest.executeInternal(SimpleClientHttpRequest.java:79) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965941272Z 	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965943792Z 	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965946391Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:47:47.965948268Z 	... 40 common frames omitted
+2025-12-08T17:47:47.965949975Z 
+2025-12-08T17:48:05.405430935Z 
+2025-12-08T17:48:05.405540574Z   .   ____          _            __ _ _
+2025-12-08T17:48:05.405548495Z  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+2025-12-08T17:48:05.405551846Z ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+2025-12-08T17:48:05.405555454Z  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+2025-12-08T17:48:05.405559241Z   '  |____| .__|_| |_|_| |_\__, | / / / /
+2025-12-08T17:48:05.405562678Z  =========|_|==============|___/=/_/_/_/
+2025-12-08T17:48:05.411330207Z  :: Spring Boot ::                (v3.2.5)
+2025-12-08T17:48:05.411384995Z 
+2025-12-08T17:48:05.703304264Z 2025-12-08T17:48:05.694Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:05.703534826Z 2025-12-08T17:48:05.703Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:48:05.704464310Z 2025-12-08T17:48:05.703Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:05.704704546Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:48:05.704720746Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:05.704832884Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:48:05.704839932Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:05.705021736Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:48:05.705078749Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:05.705090870Z 2025-12-08T17:48:05.704Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Exception on Url - http://config-server:8888:org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/booking-service/default": Connection refused. Will be trying the next url if available
+2025-12-08T17:48:05.705388940Z 2025-12-08T17:48:05.705Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:05.705516110Z 2025-12-08T17:48:05.705Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=booking-service, profiles=[default], label=null, version=2b6f201cbb3450a200afa9398fd1f1ad98ce7951, state=null
+2025-12-08T17:48:06.350770036Z 2025-12-08T17:48:06.343Z ERROR 1 --- [booking-service] [           main] o.s.boot.SpringApplication               : Application run failed
+2025-12-08T17:48:06.350812856Z 
+2025-12-08T17:48:06.350818302Z org.springframework.cloud.config.client.ConfigClientFailFastException: Could not locate PropertySource and the resource is not optional, failing
+2025-12-08T17:48:06.350840282Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:201) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:48:06.350845043Z 	at org.springframework.cloud.config.client.ConfigClientRetryBootstrapper.lambda$initialize$1(ConfigClientRetryBootstrapper.java:54) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:48:06.350848234Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:92) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:48:06.350851632Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.load(ConfigServerConfigDataLoader.java:61) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:48:06.350858602Z 	at org.springframework.boot.context.config.ConfigDataLoaders.load(ConfigDataLoaders.java:96) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350861669Z 	at org.springframework.boot.context.config.ConfigDataImporter.load(ConfigDataImporter.java:132) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350864721Z 	at org.springframework.boot.context.config.ConfigDataImporter.resolveAndLoad(ConfigDataImporter.java:87) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350867823Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentContributors.withProcessedImports(ConfigDataEnvironmentContributors.java:115) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350870773Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processInitial(ConfigDataEnvironment.java:242) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350873838Z 	at org.springframework.boot.context.config.ConfigDataEnvironment.processAndApply(ConfigDataEnvironment.java:229) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350876958Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:96) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350881938Z 	at org.springframework.boot.context.config.ConfigDataEnvironmentPostProcessor.postProcessEnvironment(ConfigDataEnvironmentPostProcessor.java:89) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350885113Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEnvironmentPreparedEvent(EnvironmentPostProcessorApplicationListener.java:109) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350888160Z 	at org.springframework.boot.env.EnvironmentPostProcessorApplicationListener.onApplicationEvent(EnvironmentPostProcessorApplicationListener.java:94) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350891395Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:185) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350894461Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:178) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350897410Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:156) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350905465Z 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:138) ~[spring-context-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350908880Z 	at org.springframework.boot.context.event.EventPublishingRunListener.multicastInitialEvent(EventPublishingRunListener.java:136) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350911895Z 	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:81) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350914804Z 	at org.springframework.boot.SpringApplicationRunListeners.lambda$environmentPrepared$2(SpringApplicationRunListeners.java:64) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350917656Z 	at java.base/java.lang.Iterable.forEach(Iterable.java:75) ~[na:na]
+2025-12-08T17:48:06.350920355Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:118) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350923210Z 	at org.springframework.boot.SpringApplicationRunListeners.doWithListeners(SpringApplicationRunListeners.java:112) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350926614Z 	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:63) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350929578Z 	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:369) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350932358Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:329) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350935154Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1354) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350938017Z 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1343) ~[spring-boot-3.2.5.jar!/:3.2.5]
+2025-12-08T17:48:06.350940950Z 	at com.bookingservice.BookingServiceApplication.main(BookingServiceApplication.java:14) ~[!/:0.0.1-SNAPSHOT]
+2025-12-08T17:48:06.350944086Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+2025-12-08T17:48:06.350946846Z 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+2025-12-08T17:48:06.350951282Z 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+2025-12-08T17:48:06.350954253Z 	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+2025-12-08T17:48:06.350956962Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:91) ~[app.jar:0.0.1-SNAPSHOT]
+2025-12-08T17:48:06.350959743Z 	at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:53) ~[app.jar:0.0.1-SNAPSHOT]
+2025-12-08T17:48:06.350962457Z 	at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:58) ~[app.jar:0.0.1-SNAPSHOT]
+2025-12-08T17:48:06.350965198Z Caused by: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://config-server:8888/application/default": Connection refused
+2025-12-08T17:48:06.350972036Z 	at org.springframework.web.client.RestTemplate.createResourceAccessException(RestTemplate.java:915) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350975601Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:895) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350978372Z 	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:790) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350982201Z 	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:672) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.350985523Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.getRemoteEnvironment(ConfigServerConfigDataLoader.java:330) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:48:06.350988688Z 	at org.springframework.cloud.config.client.ConfigServerConfigDataLoader.doLoad(ConfigServerConfigDataLoader.java:119) ~[spring-cloud-config-client-4.1.1.jar!/:4.1.1]
+2025-12-08T17:48:06.350991652Z 	... 36 common frames omitted
+2025-12-08T17:48:06.350994313Z Caused by: java.net.ConnectException: Connection refused
+2025-12-08T17:48:06.350997033Z 	at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
+2025-12-08T17:48:06.350999688Z 	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]
+2025-12-08T17:48:06.351002361Z 	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547) ~[na:na]
+2025-12-08T17:48:06.351005046Z 	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602) ~[na:na]
+2025-12-08T17:48:06.351007900Z 	at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
+2025-12-08T17:48:06.351010779Z 	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[na:na]
+2025-12-08T17:48:06.351013390Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533) ~[na:na]
+2025-12-08T17:48:06.351016033Z 	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638) ~[na:na]
+2025-12-08T17:48:06.351018642Z 	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283) ~[na:na]
+2025-12-08T17:48:06.351021461Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386) ~[na:na]
+2025-12-08T17:48:06.351024028Z 	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408) ~[na:na]
+2025-12-08T17:48:06.351026760Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329) ~[na:na]
+2025-12-08T17:48:06.351029536Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262) ~[na:na]
+2025-12-08T17:48:06.351032288Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148) ~[na:na]
+2025-12-08T17:48:06.351034976Z 	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077) ~[na:na]
+2025-12-08T17:48:06.351037774Z 	at org.springframework.http.client.SimpleClientHttpRequest.executeInternal(SimpleClientHttpRequest.java:79) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.351043953Z 	at org.springframework.http.client.AbstractStreamingClientHttpRequest.executeInternal(AbstractStreamingClientHttpRequest.java:70) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.351047842Z 	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.351050862Z 	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:889) ~[spring-web-6.1.6.jar!/:6.1.6]
+2025-12-08T17:48:06.351053770Z 	... 40 common frames omitted
+2025-12-08T17:48:06.351056411Z 
+2025-12-08T17:48:16.096222596Z 
+2025-12-08T17:48:16.096600761Z   .   ____          _            __ _ _
+2025-12-08T17:48:16.096622694Z  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+2025-12-08T17:48:16.096632645Z ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+2025-12-08T17:48:16.096746685Z  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+2025-12-08T17:48:16.096805559Z   '  |____| .__|_| |_|_| |_\__, | / / / /
+2025-12-08T17:48:16.096824717Z  =========|_|==============|___/=/_/_/_/
+2025-12-08T17:48:16.102188445Z  :: Spring Boot ::                (v3.2.5)
+2025-12-08T17:48:16.102267254Z 
+2025-12-08T17:48:16.666857289Z 2025-12-08T17:48:16.654Z  INFO 1 --- [booking-service] [           main] c.b.BookingServiceApplication            : Starting BookingServiceApplication v0.0.1-SNAPSHOT using Java 17.0.17 with PID 1 (/app/app.jar started by root in /app)
+2025-12-08T17:48:16.674323320Z 2025-12-08T17:48:16.673Z  INFO 1 --- [booking-service] [           main] c.b.BookingServiceApplication            : No active profile set, falling back to 1 default profile: "default"
+2025-12-08T17:48:17.045404323Z 2025-12-08T17:48:17.044Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:17.045824608Z 2025-12-08T17:48:17.045Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=application, profiles=[default], label=null, version=2b6f201cbb3450a200afa9398fd1f1ad98ce7951, state=null
+2025-12-08T17:48:17.047540702Z 2025-12-08T17:48:17.046Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Fetching config from server at : http://config-server:8888
+2025-12-08T17:48:17.047812593Z 2025-12-08T17:48:17.047Z  INFO 1 --- [booking-service] [           main] o.s.c.c.c.ConfigServerConfigDataLoader   : Located environment: name=booking-service, profiles=[default], label=null, version=2b6f201cbb3450a200afa9398fd1f1ad98ce7951, state=null
+2025-12-08T17:48:25.812699662Z 2025-12-08T17:48:25.811Z  INFO 1 --- [booking-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Reactive MongoDB repositories in DEFAULT mode.
+2025-12-08T17:48:26.424151270Z 2025-12-08T17:48:26.415Z  INFO 1 --- [booking-service] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 574 ms. Found 2 Reactive MongoDB repository interfaces.
+2025-12-08T17:48:28.653777274Z 2025-12-08T17:48:28.651Z  INFO 1 --- [booking-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=d6e4974d-76ee-36aa-a855-3f7fd9277bc4
+2025-12-08T17:48:31.075267398Z 2025-12-08T17:48:31.070Z  WARN 1 --- [booking-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig' of type [org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration$DeferringLoadBalancerInterceptorConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [lbRestClientPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-12-08T17:48:31.119172551Z 2025-12-08T17:48:31.117Z  WARN 1 --- [booking-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'deferringLoadBalancerInterceptor' of type [org.springframework.cloud.client.loadbalancer.DeferringLoadBalancerInterceptor] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [lbRestClientPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-12-08T17:48:31.192068393Z 2025-12-08T17:48:31.188Z  WARN 1 --- [booking-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). The currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor] is declared through a non-static factory method on that class; consider declaring it as static instead.
+2025-12-08T17:48:31.203004328Z 2025-12-08T17:48:31.200Z  WARN 1 --- [booking-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-12-08T17:48:31.302078266Z 2025-12-08T17:48:31.300Z  WARN 1 --- [booking-service] [           main] trationDelegate$BeanPostProcessorChecker : Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying). Is this bean getting eagerly injected into a currently created BeanPostProcessor [loadBalancerWebClientBuilderBeanPostProcessor]? Check the corresponding BeanPostProcessor declaration and its dependencies.
+2025-12-08T17:48:36.134863160Z 2025-12-08T17:48:36.133Z  INFO 1 --- [booking-service] [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|reactive-streams|spring-boot", "version": "4.11.2"}, "os": {"type": "Linux", "name": "Linux", "architecture": "amd64", "version": "6.6.87.2-microsoft-standard-WSL2"}, "platform": "Java/Eclipse Adoptium/17.0.17+10"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=NettyTransportSettings{eventLoopGroup=io.netty.channel.nio.NioEventLoopGroup@7c8f047a, socketChannelClass=null, allocator=null, sslContext=null}, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@4387d2f4, com.mongodb.Jep395RecordCodecProvider@1dbff71c, com.mongodb.KotlinCodecProvider@93ce24d]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[mongodb:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2025-12-08T17:48:36.543279855Z 2025-12-08T17:48:36.540Z  INFO 1 --- [booking-service] [}-mongodb:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=mongodb:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=27, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=321782019}
+2025-12-08T17:48:41.547336911Z 2025-12-08T17:48:41.546Z  INFO 1 --- [booking-service] [           main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2025-12-08T17:48:41.868219480Z 2025-12-08T17:48:41.867Z  WARN 1 --- [booking-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2025-12-08T17:48:42.053033815Z 2025-12-08T17:48:42.052Z  INFO 1 --- [booking-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2025-12-08T17:48:42.337595041Z 2025-12-08T17:48:42.332Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2025-12-08T17:48:42.356801916Z 2025-12-08T17:48:42.355Z  INFO 1 --- [booking-service] [           main] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-12-08T17:48:42.440684976Z 2025-12-08T17:48:42.439Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2025-12-08T17:48:42.440830824Z 2025-12-08T17:48:42.440Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2025-12-08T17:48:42.440852419Z 2025-12-08T17:48:42.440Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2025-12-08T17:48:42.440861784Z 2025-12-08T17:48:42.440Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2025-12-08T17:48:42.440867976Z 2025-12-08T17:48:42.440Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2025-12-08T17:48:42.440873245Z 2025-12-08T17:48:42.440Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2025-12-08T17:48:42.440878442Z 2025-12-08T17:48:42.440Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2025-12-08T17:48:43.124350029Z 2025-12-08T17:48:43.123Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2025-12-08T17:48:43.131277104Z 2025-12-08T17:48:43.130Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 30
+2025-12-08T17:48:43.138638122Z 2025-12-08T17:48:43.137Z  INFO 1 --- [booking-service] [           main] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2025-12-08T17:48:43.153551732Z 2025-12-08T17:48:43.152Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1765216123151 with initial instances count: 2
+2025-12-08T17:48:43.176671080Z 2025-12-08T17:48:43.175Z  INFO 1 --- [booking-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application BOOKING-SERVICE with eureka with status UP
+2025-12-08T17:48:43.183620105Z 2025-12-08T17:48:43.181Z  INFO 1 --- [booking-service] [           main] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1765216123181, current=UP, previous=STARTING]
+2025-12-08T17:48:43.187899094Z 2025-12-08T17:48:43.187Z  INFO 1 --- [booking-service] [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_BOOKING-SERVICE/7bcf61a9ea58:booking-service:8080: registering service...
+2025-12-08T17:48:43.313220037Z 2025-12-08T17:48:43.312Z  INFO 1 --- [booking-service] [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_BOOKING-SERVICE/7bcf61a9ea58:booking-service:8080 - registration status: 204
+2025-12-08T17:48:43.369837699Z 2025-12-08T17:48:43.368Z  INFO 1 --- [booking-service] [           main] o.s.b.web.embedded.netty.NettyWebServer  : Netty started on port 8080
+2025-12-08T17:48:43.375707261Z 2025-12-08T17:48:43.374Z  INFO 1 --- [booking-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2025-12-08T17:48:43.402898749Z 2025-12-08T17:48:43.402Z  INFO 1 --- [booking-service] [           main] c.b.BookingServiceApplication            : Started BookingServiceApplication in 32.271 seconds (process running for 34.392)

@@ -35,7 +35,7 @@ public class BookingEventProducer {
         return Mono.fromCallable(() -> kafkaTemplate.send(topic, event))
                 .subscribeOn(Schedulers.boundedElastic())
                 .timeout(Duration.ofSeconds(5))
-                .flatMap(sendFuture -> Mono.fromFuture(sendFuture))
+                .flatMap(Mono::fromFuture)
                 .timeout(Duration.ofSeconds(5))
                 .map(ignored -> true)
                 .doOnError(ex -> log.error("Failed to publish booking event", ex))

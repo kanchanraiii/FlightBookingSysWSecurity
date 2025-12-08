@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -19,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -34,8 +32,6 @@ import com.bookingservice.model.Booking;
 import com.bookingservice.model.BookingStatus;
 import com.bookingservice.model.Gender;
 import com.bookingservice.model.TripType;
-import com.bookingservice.service.BookingEventProducer;
-import com.bookingservice.service.EmailService;
 import com.bookingservice.repository.BookingRepository;
 import com.bookingservice.repository.PassengerRepository;
 import com.bookingservice.requests.BookingRequest;
@@ -77,6 +73,8 @@ class BookingServiceTest {
         when(emailService.sendBookingNotification(any(), any())).thenReturn(Mono.empty());
         when(passengerRepository.deleteByBookingId(anyString())).thenReturn(Mono.empty());
         when(bookingRepository.deleteById(anyString())).thenReturn(Mono.empty());
+        when(bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(anyString(), anyString(), anyInt()))
+                .thenReturn(Mono.just(false));
         when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> {
             Booking toSave = invocation.getArgument(0);
             if (toSave.getBookingId() == null) {
@@ -222,6 +220,45 @@ class BookingServiceTest {
     }
 
     @Test
+    void bookFlight_duplicatePassengerThrowsValidationException() {
+        BookingRequest request = buildRequest(TripType.ONE_WAY, false);
+        request.setPassengers(java.util.List.of(passenger("Alice", "1A", null)));
+
+        when(flightClient.getFlight("OUT-DUP")).thenReturn(Mono.just(flight("OUT-DUP", 5)));
+        when(bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(anyString(), anyString(), anyInt()))
+                .thenReturn(Mono.just(true));
+
+        StepVerifier.create(bookingService.bookFlight("OUT-DUP", request))
+                .expectErrorSatisfies(error -> {
+                    assertEquals(ValidationException.class, error.getClass());
+                    assertEquals("Passenger Alice is already booked on this flight", error.getMessage());
+                })
+                .verify();
+
+        verify(bookingRepository, never()).save(any());
+        verify(flightClient, never()).reserveSeats(anyString(), anyInt());
+    }
+
+    @Test
+    void cancelTicket_handlesReturnSeatReleaseFailureGracefully() {
+        Booking booking = new Booking();
+        booking.setBookingId("B-ROLL");
+        booking.setOutboundFlightId("OUT-X");
+        booking.setReturnFlight("RET-X");
+        booking.setTotalPassengers(1);
+        booking.setStatus(BookingStatus.CONFIRMED);
+
+        when(bookingRepository.findByPnrOutbound("PNR-X")).thenReturn(Mono.just(booking));
+        when(bookingRepository.save(any())).thenReturn(Mono.just(booking));
+        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(eventProducer.publish(any())).thenReturn(Mono.just(false)); // triggers warning
+
+        StepVerifier.create(bookingService.cancelTicket("PNR-X"))
+                .assertNext(map -> assertEquals("Booking cancelled", map.get("message")))
+                .verifyComplete();
+    }
+
+    @Test
     void getHistory_blankEmail_returnsValidationError() {
         StepVerifier.create(bookingService.getHistory(" "))
                 .expectErrorSatisfies(error -> {
@@ -295,117 +332,6 @@ class BookingServiceTest {
                 .verify();
     }
 
-//    @Test
-//    void getTicket_returnsBookingWhenFound() {
-//        Booking booking = new Booking(
-//                "booking-5",
-//                TripType.ONE_WAY,
-//                "OUT-5",
-//                null,
-//                "PNR123",
-//                null,
-//                "Jane Doe",
-//                "jane@example.com",
-//                1,
-//                BookingStatus.CONFIRMED
-//        );
-//
-//        when(bookingRepository.findByPnrOutbound("PNR123")).thenReturn(Mono.just(booking));
-//
-//        StepVerifier.create(bookingService.getTicket("PNR123"))
-//                .expectNext(booking)
-//                .verifyComplete();
-//    }
-//
-//    @Test
-//    void getTicket_notFoundThrowsResourceNotFound() {
-//        when(bookingRepository.findByPnrOutbound("MISSING")).thenReturn(Mono.empty());
-//
-//        StepVerifier.create(bookingService.getTicket("MISSING"))
-//                .expectError(ResourceNotFoundException.class)
-//                .verify();
-//    }
-
-//    @Test
-//    void cancelTicket_marksCancelledAndReleasesSeats() {
-//        Booking booking = new Booking(
-//                "booking-6",
-//                TripType.ROUND_TRIP,
-//                "OUT-6",
-//                "RET-6",
-//                "PNR456",
-//                "PNR789",
-//                "Alex Roe",
-//                "alex@example.com",
-//                2,
-//                BookingStatus.CONFIRMED
-//        );
-//
-//        when(bookingRepository.findByPnrOutbound("PNR456")).thenReturn(Mono.just(booking));
-//        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
-//
-//        StepVerifier.create(bookingService.cancelTicket("PNR456"))
-//                .expectNextMatches(result -> "Booking cancelled".equals(result.get("message")))
-//                .verifyComplete();
-//
-//        ArgumentCaptor<Booking> captor = ArgumentCaptor.forClass(Booking.class);
-//        verify(bookingRepository, times(1)).save(captor.capture());
-//        assertEquals(BookingStatus.CANCELLED, captor.getValue().getStatus());
-//
-//        verify(flightClient, times(1)).releaseSeats("OUT-6", 2);
-//        verify(flightClient, times(1)).releaseSeats("RET-6", 2);
-//    }
-//
-//    @Test
-//    void cancelTicket_oneWayReleasesOnlyOutbound() {
-//        Booking booking = new Booking(
-//                "booking-8",
-//                TripType.ONE_WAY,
-//                "OUT-8",
-//                null,
-//                "PNR111",
-//                null,
-//                "Taylor",
-//                "taylor@example.com",
-//                1,
-//                BookingStatus.CONFIRMED
-//        );
-//
-//        when(bookingRepository.findByPnrOutbound("PNR111")).thenReturn(Mono.just(booking));
-//        when(flightClient.releaseSeats("OUT-8", 1)).thenReturn(Mono.empty());
-//
-//        StepVerifier.create(bookingService.cancelTicket("PNR111"))
-//                .expectNextMatches(map -> map.get("message").equals("Booking cancelled"))
-//                .verifyComplete();
-//
-//        verify(flightClient, times(1)).releaseSeats("OUT-8", 1);
-//        verify(flightClient, never()).releaseSeats(eq(null), anyInt());
-//    }
-
-//    @Test
-//    void cancelTicket_alreadyCancelledThrowsValidationException() {
-//        Booking booking = new Booking(
-//                "booking-7",
-//                TripType.ONE_WAY,
-//                "OUT-7",
-//                null,
-//                "PNR000",
-//                null,
-//                "Chris Smith",
-//                "chris@example.com",
-//                1,
-//                BookingStatus.CANCELLED
-//        );
-//
-//        when(bookingRepository.findByPnrOutbound("PNR000")).thenReturn(Mono.just(booking));
-//
-//        StepVerifier.create(bookingService.cancelTicket("PNR000"))
-//                .expectErrorSatisfies(error -> {
-//                    assertEquals(ValidationException.class, error.getClass());
-//                    assertEquals("Already cancelled", error.getMessage());
-//                })
-//                .verify();
-//    }
 
     @Test
     void cancelTicket_notFoundThrowsResourceNotFound() {

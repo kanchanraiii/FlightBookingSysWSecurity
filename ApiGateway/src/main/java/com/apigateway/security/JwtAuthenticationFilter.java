@@ -2,7 +2,6 @@ package com.apigateway.security;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,11 @@ import reactor.core.publisher.Mono;
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -44,47 +46,34 @@ public class JwtAuthenticationFilter implements WebFilter {
 
         String token = authHeader.substring(7);
 
-        if (!jwtUtil.isValid(token)) {
-            return unauthorized(exchange);
-        }
-
-        // Extract claims
-        Claims claims = jwtUtil.extractClaims(token);
-        String roleClaim = claims.get("role", String.class);
+        Claims claims = jwtUtil.isValid(token) ? jwtUtil.extractClaims(token) : null;
+        String roleClaim = claims != null ? claims.get("role", String.class) : null;
         if (roleClaim == null) {
             return unauthorized(exchange);
         }
 
-        Role resolvedRole;
         try {
             String normalizedRole = roleClaim.startsWith("ROLE_") ? roleClaim : "ROLE_" + roleClaim;
-            resolvedRole = Role.valueOf(normalizedRole);
+            Role resolvedRole = Role.valueOf(normalizedRole);
+            return chain.filter(exchange)
+                    .contextWrite(ReactiveSecurityContextHolder.withAuthentication(
+                            new UsernamePasswordAuthenticationToken(
+                                    claims.getSubject(), null,
+                                    List.of(new SimpleGrantedAuthority(resolvedRole.name()))
+                            )
+                    ));
         } catch (IllegalArgumentException ex) {
             return unauthorized(exchange);
         }
-
-        return chain.filter(exchange)
-                .contextWrite(ReactiveSecurityContextHolder.withAuthentication(
-                        new UsernamePasswordAuthenticationToken(
-                                claims.getSubject(), null,
-                                List.of(new SimpleGrantedAuthority(resolvedRole.name()))
-                        )
-                ));
     }
 
     private boolean isPublic(String path, HttpMethod method) {
-        if (path.startsWith("/auth") || path.startsWith("/api/auth")) {
-            return true;
-        }
-        if (method == HttpMethod.GET &&
+        return path.startsWith("/auth")
+                || path.startsWith("/api/auth")
+                || (method == HttpMethod.GET &&
                 (path.startsWith("/flight/api/flight/getAllAirlines")
-                        || path.startsWith("/flight/api/flight/getAllFlights"))) {
-            return true;
-        }
-        if (method == HttpMethod.POST && path.startsWith("/flight/api/flight/search")) {
-            return true;
-        }
-        return false;
+                        || path.startsWith("/flight/api/flight/getAllFlights")))
+                || (method == HttpMethod.POST && path.startsWith("/flight/api/flight/search"));
     }
 
     private Mono<Void> unauthorized(ServerWebExchange exchange) {

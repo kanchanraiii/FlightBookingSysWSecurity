@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +80,7 @@ class FlightSearchServiceTests {
                 .assertNext(result -> {
                     assertNotNull(result.getDepartureDate());
                     assertNotNull(result.getDepartureTime());
-                    assertNotNull(result.getPrice());
+                    assertTrue(result.getPrice() > 0);
                 })
                 .verifyComplete();
     }
@@ -153,4 +154,3 @@ class FlightSearchServiceTests {
                 .verifyError(ValidationException.class);
     }
 }
-

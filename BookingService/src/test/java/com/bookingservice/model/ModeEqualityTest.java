@@ -17,8 +17,8 @@ class ModelEqualityTest {
         assertEquals(b1, b2);
         assertEquals(b1.hashCode(), b2.hashCode());
         assertNotEquals(b1, b3);
-        assertNotEquals(b1, null);
-        assertNotEquals(b1, "string");
+        assertNotEquals(null, b1);
+        assertNotEquals("string", b1);
         assertTrue(b1.toString().contains("PNR1"));
     }
 
@@ -27,14 +27,31 @@ class ModelEqualityTest {
         Passenger p1 = passenger("p1", "John", "1A");
         Passenger p2 = passenger("p1", "John", "1A");
         Passenger p3 = passenger("p2", "Jane", "2B");
+        Passenger p4 = passenger("p1", "John", "DIFF");
 
         assertEquals(p1, p2);
         assertEquals(p1.hashCode(), p2.hashCode());
         assertNotEquals(p1, p3);
-        assertNotEquals(p1, null);
-        assertNotEquals(p1, "string");
+        assertNotEquals(null, p1);
+        assertNotEquals("string", p1);
         assertTrue(p1.toString().contains("John"));
-        assertTrue(p1.equals(p1)); // self check
+        assertNotEquals(p1, p4);
+        assertEquals(p1, p1); // self check
+    }
+
+    @Test
+    void bookingEvent_equalsHashCodeAndToString() {
+        java.time.Instant now = java.time.Instant.now();
+        BookingEvent e1 = bookingEvent("b1", now);
+        BookingEvent e2 = bookingEvent("b1", now);
+        BookingEvent e3 = bookingEvent("b2", now.plusSeconds(1));
+
+        assertEquals(e1, e2);
+        assertEquals(e1.hashCode(), e2.hashCode());
+        assertNotEquals(e1, e3);
+        assertNotEquals(null, e1);
+        assertNotEquals("string", e1);
+        assertTrue(e1.toString().contains("b1"));
     }
 
     private Booking booking(String id, String pnr, String outbound) {
@@ -61,5 +78,22 @@ class ModelEqualityTest {
         p.setSeatOutbound(seat);
         p.setSeatReturn("2A");
         return p;
+    }
+
+    private BookingEvent bookingEvent(String bookingId, java.time.Instant occurredAt) {
+        return new BookingEvent(
+                BookingEventType.BOOKED,
+                bookingId,
+                "PNR1",
+                "PNR2",
+                "OUT1",
+                "RET1",
+                "Alice",
+                "alice@example.com",
+                2,
+                BookingStatus.CONFIRMED,
+                TripType.ROUND_TRIP,
+                occurredAt
+        );
     }
 }

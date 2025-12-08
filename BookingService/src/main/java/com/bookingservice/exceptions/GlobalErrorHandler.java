@@ -43,8 +43,8 @@ public class GlobalErrorHandler {
         Map<String, String> errors = ex.getFieldErrors()
                 .stream()
                 .collect(Collectors.toMap(
-                        fieldError -> fieldError.getField(),
-                        fieldError -> fieldError.getDefaultMessage(),
+                        org.springframework.validation.FieldError::getField,
+                        org.springframework.context.MessageSourceResolvable::getDefaultMessage,
                         (first, ignored) -> first,
                         LinkedHashMap::new));
         return Mono.just(errors);
