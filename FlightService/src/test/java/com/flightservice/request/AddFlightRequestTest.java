@@ -71,9 +71,57 @@ class AddFlightRequestTest {
 
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
-        assertNotEquals(null, a);
+        assertNotEquals(a, null);
+        assertNotEquals(a, "string");
         b.setFlightNumber("DIFF");
         assertNotEquals(a, b);
+        // flip each field to hit every Lombok equals condition
+        b = cloneRequest();
+        b.setAirlineCode("DIFF");
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setSourceCity(Cities.BANGLORE);
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setDestinationCity(Cities.CHENNAI);
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setDepartureDate(LocalDate.of(2026, 1, 1));
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setDepartureTime(LocalTime.MIDNIGHT);
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setArrivalDate(LocalDate.of(2026, 1, 1));
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setArrivalTime(LocalTime.of(23, 0));
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setTotalSeats(999);
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setPrice(999f);
+        assertNotEquals(a, b);
+        b = cloneRequest();
+        b.setMealAvailable(false);
+        assertNotEquals(a, b);
         assertTrue(a.toString().contains("AL1"));
+    }
+
+    private AddFlightRequest cloneRequest() {
+        AddFlightRequest req = new AddFlightRequest();
+        req.setAirlineCode("AL1");
+        req.setFlightNumber("FN123");
+        req.setSourceCity(Cities.DELHI);
+        req.setDestinationCity(Cities.MUMBAI);
+        req.setDepartureDate(LocalDate.of(2025, 1, 1));
+        req.setDepartureTime(LocalTime.NOON);
+        req.setArrivalDate(LocalDate.of(2025, 1, 1));
+        req.setArrivalTime(LocalTime.of(15, 0));
+        req.setTotalSeats(100);
+        req.setPrice(300f);
+        req.setMealAvailable(true);
+        return req;
     }
 }

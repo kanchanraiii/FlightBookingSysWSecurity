@@ -77,9 +77,46 @@ class FlightsTest {
 
         assertEquals(f1, f2);
         assertEquals(f1.hashCode(), f2.hashCode());
-        assertNotEquals(null, f1);
+        assertNotEquals(f1, null);
+        assertNotEquals(f1, "string");
         f2.setFlightId("DIFF");
         assertNotEquals(f1, f2);
+        // flip each field to hit Lombok equals branches
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setFlightNumber("X")));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setAirlineCode("X")));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setSourceCity(Cities.BANGLORE)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setDestinationCity(Cities.CHENNAI)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setDepartureDate(LocalDate.of(2030, 1, 1))));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setArrivalDate(LocalDate.of(2030, 1, 1))));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setDepartureTime(LocalTime.MIDNIGHT)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setArrivalTime(LocalTime.NOON)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setMealAvailable(true)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setTotalSeats(999)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setAvailableSeats(1)));
+        assertNotEquals(f1, mutate(copy(f1), fl -> fl.setPrice(1.23)));
         assertFalse(f1.toString().isEmpty());
+    }
+
+    private Flights copy(Flights original) {
+        Flights f = new Flights();
+        f.setFlightId(original.getFlightId());
+        f.setFlightNumber(original.getFlightNumber());
+        f.setAirlineCode(original.getAirlineCode());
+        f.setSourceCity(original.getSourceCity());
+        f.setDestinationCity(original.getDestinationCity());
+        f.setDepartureDate(original.getDepartureDate());
+        f.setArrivalDate(original.getArrivalDate());
+        f.setDepartureTime(original.getDepartureTime());
+        f.setArrivalTime(original.getArrivalTime());
+        f.setMealAvailable(original.isMealAvailable());
+        f.setTotalSeats(original.getTotalSeats());
+        f.setAvailableSeats(original.getAvailableSeats());
+        f.setPrice(original.getPrice());
+        return f;
+    }
+
+    private Flights mutate(Flights f, java.util.function.Consumer<Flights> mutator) {
+        mutator.accept(f);
+        return f;
     }
 }
