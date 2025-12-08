@@ -28,7 +28,7 @@ class ModelTests {
         assertEquals(airline.hashCode(), same.hashCode());
         same.setAirlineName("Different");
         assertNotEquals(airline, same);
-        assertNotEquals(airline, null);
+        assertNotEquals(null, airline);
     }
 
     @Test
@@ -54,7 +54,7 @@ class ModelTests {
         assertEquals(seat.hashCode(), same.hashCode());
         same.setSeatNo("DIFF");
         assertNotEquals(seat, same);
-        assertNotEquals(seat, null);
+        assertNotEquals(null, seat);
     }
 
    

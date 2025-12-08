@@ -77,7 +77,7 @@ class FlightsTest {
 
         assertEquals(f1, f2);
         assertEquals(f1.hashCode(), f2.hashCode());
-        assertNotEquals(f1, null);
+        assertNotEquals(null, f1);
         f2.setFlightId("DIFF");
         assertNotEquals(f1, f2);
         assertFalse(f1.toString().isEmpty());

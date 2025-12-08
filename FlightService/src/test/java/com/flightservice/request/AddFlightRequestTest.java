@@ -71,7 +71,7 @@ class AddFlightRequestTest {
 
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
-        assertNotEquals(a, null);
+        assertNotEquals(null, a);
         b.setFlightNumber("DIFF");
         assertNotEquals(a, b);
         assertTrue(a.toString().contains("AL1"));
