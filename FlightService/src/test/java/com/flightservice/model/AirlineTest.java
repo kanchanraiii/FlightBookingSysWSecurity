@@ -19,10 +19,10 @@ class AirlineTest {
         Airline same = new Airline();
         same.setAirlineCode("AL1");
         same.setAirlineName("Airline One");
-        assertEquals(airline, same);
+        assertEquals(same, airline);
         assertEquals(airline.hashCode(), same.hashCode());
-        assertNotEquals(airline, null);
-        assertNotEquals(airline, "x");
+        assertNotEquals(null, airline);
+        assertNotEquals("x", airline);
         Airline different = new Airline();
         different.setAirlineCode("DIFF");
         different.setAirlineName("Other");

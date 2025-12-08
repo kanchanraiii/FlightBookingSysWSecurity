@@ -75,10 +75,10 @@ class FlightsTest {
         f2.setAvailableSeats(175);
         f2.setPrice(249.50);
 
-        assertEquals(f1, f2);
+        assertEquals(f2, f1);
         assertEquals(f1.hashCode(), f2.hashCode());
-        assertNotEquals(f1, null);
-        assertNotEquals(f1, "string");
+        assertNotEquals(null, f1);
+        assertNotEquals("string", f1);
         f2.setFlightId("DIFF");
         assertNotEquals(f1, f2);
         // flip each field to hit Lombok equals branches

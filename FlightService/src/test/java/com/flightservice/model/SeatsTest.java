@@ -30,10 +30,10 @@ class SeatsTest {
         same.setAvailable(false);
         same.setBooked(true);
 
-        assertEquals(seats, same);
+        assertEquals(same, seats);
         assertEquals(seats.hashCode(), same.hashCode());
-        assertNotEquals(seats, null);
-        assertNotEquals(seats, "x");
+        assertNotEquals(null, seats);
+        assertNotEquals("x", seats);
         assertNotEquals(seats, mutate(copy(seats), s -> s.setSeatId("DIFF")));
         assertNotEquals(seats, mutate(copy(seats), s -> s.setFlightId("DIFF")));
         assertNotEquals(seats, mutate(copy(seats), s -> s.setSeatNo("1B")));

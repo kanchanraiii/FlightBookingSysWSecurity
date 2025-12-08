@@ -19,7 +19,7 @@ class ModelEqualityTest {
         assertEquals(b1.hashCode(), b2.hashCode());
         assertNotEquals(b1, b3);
         assertNotNull(b1);
-        assertNotEquals(b1, "string");
+        assertNotEquals("string", b1);
         assertTrue(b1.toString().contains("PNR1"));
     }
 
@@ -46,7 +46,7 @@ class ModelEqualityTest {
         assertEquals(p1.hashCode(), p2.hashCode());
         assertNotEquals(p1, p3);
         assertNotNull(p1);
-        assertNotEquals(p1, "string");
+        assertNotEquals("string", p1);
         assertTrue(p1.toString().contains("John"));
         assertNotEquals(p1, p4);
         assertEquals(p1, p1); // self check
@@ -78,7 +78,7 @@ class ModelEqualityTest {
         assertEquals(e1.hashCode(), e2.hashCode());
         assertNotEquals(e1, e3);
         assertNotNull(e1);
-        assertNotEquals(e1, "string");
+        assertNotEquals("string", e1);
         assertTrue(e1.toString().contains("b1"));
     }
 
@@ -104,7 +104,7 @@ class ModelEqualityTest {
         Booking equal = fullBooking();
         assertEquals(baseline, equal);
         assertNotNull(baseline);
-        assertNotEquals(baseline, "string");
+        assertNotEquals("string", baseline);
         assertEquals(baseline, baseline);
 
         assertBookingNotEquals(b -> b.setBookingId("DIFF"));
