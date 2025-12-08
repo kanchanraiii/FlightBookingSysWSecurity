@@ -2,6 +2,8 @@ package com.bookingservice.service;
 
 import java.time.format.DateTimeFormatter;
 
+import java.time.Duration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,7 @@ import com.bookingservice.model.Booking;
 import com.bookingservice.model.BookingEventType;
 
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class EmailService {
@@ -37,10 +40,14 @@ public class EmailService {
             return Mono.empty();
         }
 
-        return Mono.fromRunnable(() -> mailSender.send(buildMessage(booking, type)))
+        return Mono.fromCallable(() -> {
+                    mailSender.send(buildMessage(booking, type));
+                    return true;
+                })
+                .subscribeOn(Schedulers.boundedElastic())
+                .timeout(Duration.ofSeconds(10))
                 .then()
-                .doOnError(ex -> log.error("Failed to send booking email", ex))
-                .onErrorResume(ex -> Mono.empty());
+                .doOnError(ex -> log.error("Failed to send booking email", ex));
     }
 
     private SimpleMailMessage buildMessage(Booking booking, BookingEventType type) {

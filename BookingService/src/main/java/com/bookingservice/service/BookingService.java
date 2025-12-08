@@ -75,7 +75,7 @@ public class BookingService {
                                 flightClient.reserveSeats(flightId, count)
                                         .then(savePassengers(req, saved))
                                         .then(emitSideEffects(saved, BookingEventType.BOOKED))
-                                        .thenReturn(saved));
+                                        .flatMap(outcome -> handleOutcome(saved, outcome)));
             });
         }
 
@@ -98,7 +98,7 @@ public class BookingService {
                                             .then(flightClient.reserveSeats(req.getReturnFlightId(), count))
                                             .then(savePassengers(req, saved))
                                             .then(emitSideEffects(saved, BookingEventType.BOOKED))
-                                            .thenReturn(saved));
+                                            .flatMap(outcome -> handleOutcome(saved, outcome)));
                 });
     }
 
@@ -107,11 +107,15 @@ public class BookingService {
 
         return Flux.fromIterable(req.getPassengers())
                 .flatMap(p ->
-                        bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(
-                                        outboundId,
-                                        p.getName(),
-                                        p.getAge()
+                        Mono.justOrEmpty(
+                                        bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(
+                                                outboundId,
+                                                p.getName(),
+                                                p.getAge()
+                                        )
                                 )
+                                .flatMap(boolMono -> boolMono)
+                                .defaultIfEmpty(false)
                                 .flatMap(exists -> {
                                     if (exists) {
                                         return Mono.error(new ValidationException(
@@ -203,8 +207,10 @@ public class BookingService {
                     return bookingRepository.save(booking)
                             .flatMap(saved -> Mono.when(releaseOutbound, releaseReturn)
                                     .then(emitSideEffects(saved, BookingEventType.CANCELLED))
-                                    .thenReturn(Map.of(
-                                            "message", "Booking cancelled")));
+                                    .flatMap(outcome -> {
+                                        saved.setWarnings(outcome.warnings());
+                                        return Mono.just(responseWithWarnings("Booking cancelled", outcome.warnings()));
+                                    }));
                 });
     }
 
@@ -254,13 +260,84 @@ public class BookingService {
         return bookingRepository.findByContactEmail(email);
     }
 
-    private Mono<Void> emitSideEffects(Booking booking, BookingEventType type) {
+    private Mono<SideEffectOutcome> emitSideEffects(Booking booking, BookingEventType type) {
         BookingEvent event = toEvent(booking, type);
-        return Mono.when(
-                        eventProducer.publish(event),
-                        emailService.sendBookingNotification(booking, type)
-                )
+
+        Mono<Boolean> kafkaOkMono = eventProducer.publish(event)
+                .defaultIfEmpty(true);
+
+        Mono<String> emailResult = emailService.sendBookingNotification(booking, type)
+                .then(Mono.<String>empty())
+                .onErrorResume(ex -> Mono.just("Stored in DB but email not sent: " + rootMessage(ex)));
+
+        return Mono.zip(kafkaOkMono, emailResult.defaultIfEmpty(""))
+                .map(tuple -> {
+                    boolean kafkaOk = tuple.getT1();
+                    java.util.List<String> warnings = new java.util.ArrayList<>();
+                    if (!kafkaOk) {
+                        warnings.add("Kafka server is down; event not published.");
+                    }
+                    if (tuple.getT2() != null && !tuple.getT2().isBlank()) {
+                        warnings.add(tuple.getT2());
+                    }
+                    return new SideEffectOutcome(kafkaOk, warnings);
+                });
+    }
+
+    private Mono<Booking> attachWarnings(Booking booking, SideEffectOutcome outcome) {
+        booking.setWarnings(outcome.warnings());
+        return Mono.just(booking);
+    }
+
+    private Map<String, String> responseWithWarnings(String baseMessage, java.util.List<String> warnings) {
+        if (warnings == null || warnings.isEmpty()) {
+            return Map.of("message", baseMessage);
+        }
+        return Map.of(
+                "message", baseMessage,
+                "warning", String.join("; ", warnings)
+        );
+    }
+
+    private Mono<Booking> handleOutcome(Booking booking, SideEffectOutcome outcome) {
+        if (!outcome.kafkaOk()) {
+            return rollbackBooking(booking)
+                    .then(Mono.error(new org.springframework.web.server.ResponseStatusException(
+                            org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE,
+                            "Couldn't book ticket as Kafka server is down."
+                    )));
+        }
+        booking.setWarnings(outcome.warnings());
+        return Mono.just(booking);
+    }
+
+    private Mono<Void> rollbackBooking(Booking booking) {
+        Mono<Void> deletePassengers = passengerRepository.deleteByBookingId(booking.getBookingId())
                 .onErrorResume(ex -> Mono.empty());
+        Mono<Void> deleteBooking = bookingRepository.deleteById(booking.getBookingId())
+                .onErrorResume(ex -> Mono.empty());
+        Mono<Void> releaseOutbound = flightClient.releaseSeats(
+                        booking.getOutboundFlightId(),
+                        booking.getTotalPassengers())
+                .onErrorResume(ex -> Mono.empty());
+        Mono<Void> releaseReturn = booking.getReturnFlight() == null
+                ? Mono.empty()
+                : flightClient.releaseSeats(
+                        booking.getReturnFlight(),
+                        booking.getTotalPassengers())
+                .onErrorResume(ex -> Mono.empty());
+
+        return Mono.when(deletePassengers, deleteBooking, releaseOutbound, releaseReturn).then();
+    }
+
+    private record SideEffectOutcome(boolean kafkaOk, java.util.List<String> warnings) {}
+
+    private String rootMessage(Throwable ex) {
+        Throwable cur = ex;
+        while (cur.getCause() != null) {
+            cur = cur.getCause();
+        }
+        return cur.getMessage() != null ? cur.getMessage() : cur.toString();
     }
 
     private BookingEvent toEvent(Booking booking, BookingEventType type) {

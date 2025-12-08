@@ -22,12 +22,20 @@ public class Booking {
 	private String returnFlight;
 	private String pnrOutbound;
 	private List<Passenger> passengers;
+    @org.springframework.data.annotation.Transient
+    private List<String> warnings;
     public List<Passenger> getPassengers() {
 		return passengers;
 	}
 	public void setPassengers(List<Passenger> passengers) {
 		this.passengers = passengers;
 	}
+    public List<String> getWarnings() {
+        return warnings;
+    }
+    public void setWarnings(List<String> warnings) {
+        this.warnings = warnings;
+    }
 	public String getBookingId() {
 		return bookingId;
 	}

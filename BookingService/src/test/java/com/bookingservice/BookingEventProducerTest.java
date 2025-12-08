@@ -40,6 +40,7 @@ class BookingEventProducerTest {
         BookingEventProducer producer = new BookingEventProducer(kafkaTemplate, "booking-events");
 
         StepVerifier.create(producer.publish(new BookingEvent()))
+                .expectNext(true)
                 .verifyComplete();
 
         verify(kafkaTemplate, times(1)).send(any(), any());

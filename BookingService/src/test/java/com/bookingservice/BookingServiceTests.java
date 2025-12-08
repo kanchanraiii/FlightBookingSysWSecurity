@@ -79,10 +79,13 @@ class BookingServiceTests {
         flightDto.setFlightId("F1");
         flightDto.setAvailableSeats(5);
 
-        when(eventProducer.publish(any())).thenReturn(Mono.empty());
+        when(eventProducer.publish(any())).thenReturn(Mono.just(true));
         when(emailService.sendBookingNotification(any(), any())).thenReturn(Mono.empty());
         when(passengerRepository.saveAll(any(Iterable.class))).thenReturn(Flux.empty());
         when(passengerRepository.saveAll(any(org.reactivestreams.Publisher.class))).thenReturn(Flux.empty());
+        when(passengerRepository.deleteByBookingId(anyString())).thenReturn(Mono.empty());
+        when(bookingRepository.deleteById(anyString())).thenReturn(Mono.empty());
+        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
     }
 
     private PassengerRequest passenger(String name) {
@@ -209,7 +212,7 @@ class BookingServiceTests {
     void bookFlight_sideEffectsFailureIsSwallowed() {
         when(flightClient.getFlight("F1")).thenReturn(Mono.just(flightDto));
         when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
-        when(eventProducer.publish(any())).thenReturn(Mono.error(new RuntimeException("kafka down")));
+        when(eventProducer.publish(any())).thenReturn(Mono.just(false));
         when(bookingRepository.save(any())).thenAnswer(inv -> {
             Booking b = inv.getArgument(0);
             ReflectionTestUtils.setField(b, "bookingId", "B3");
@@ -217,8 +220,7 @@ class BookingServiceTests {
         });
 
         StepVerifier.create(bookingService.bookFlight("F1", request))
-                .assertNext(b -> assertNotNull(b.getBookingId()))
-                .verifyComplete();
+                .verifyError(org.springframework.web.server.ResponseStatusException.class);
     }
 
     @Test
