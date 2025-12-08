@@ -58,6 +58,13 @@ class TicketServiceTest {
     }
 
     @Test
+    void getTicketByPnr_rejectsNull() {
+        StepVerifier.create(ticketService.getTicketByPnr(null))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
     void getTicketByPnr_returnsOutboundBooking() {
         Booking booking = booking("ABC123");
         when(bookingRepository.findByPnrOutbound("ABC123")).thenReturn(Mono.just(booking));

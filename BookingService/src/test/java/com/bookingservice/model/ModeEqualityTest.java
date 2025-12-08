@@ -23,6 +23,18 @@ class ModelEqualityTest {
     }
 
     @Test
+    void booking_handlesNullFieldsInEquals() {
+        Booking left = new Booking();
+        Booking right = new Booking();
+
+        assertEquals(left, right); // both null fields
+        right.setPnrReturn("X");
+        assertNotEquals(left, right); // null vs value branch
+        right.setPnrReturn(null);
+        assertEquals(left, right);
+    }
+
+    @Test
     void passenger_equalsHashCodeAndToString() {
         Passenger p1 = passenger("p1", "John", "1A");
         Passenger p2 = passenger("p1", "John", "1A");
@@ -40,6 +52,21 @@ class ModelEqualityTest {
     }
 
     @Test
+    void passenger_handlesNullOptionalFields() {
+        Passenger base = new Passenger();
+        base.setPassengerId("P1");
+
+        Passenger compare = new Passenger();
+        compare.setPassengerId("P1");
+
+        assertEquals(base, compare);
+        compare.setSeatOutbound("1A");
+        assertNotEquals(base, compare);
+        base.setSeatOutbound("1A");
+        assertEquals(base, compare);
+    }
+
+    @Test
     void bookingEvent_equalsHashCodeAndToString() {
         java.time.Instant now = java.time.Instant.now();
         BookingEvent e1 = bookingEvent("b1", now);
@@ -52,6 +79,176 @@ class ModelEqualityTest {
         assertNotEquals(null, e1);
         assertNotEquals("string", e1);
         assertTrue(e1.toString().contains("b1"));
+    }
+
+    @Test
+    void bookingEvent_handlesNulls() {
+        BookingEvent a = new BookingEvent();
+        BookingEvent b = new BookingEvent();
+        b.setPnrReturn("X");
+        assertNotEquals(a, b);
+        b.setPnrReturn(null);
+        assertEquals(a, b);
+    }
+
+    @Test
+    void booking_coversAllFieldComparisons() {
+        Booking allNull = new Booking();
+        Booking sameNull = new Booking();
+        assertEquals(allNull, sameNull);
+        sameNull.setBookingId("ID");
+        assertNotEquals(allNull, sameNull);
+
+        Booking baseline = fullBooking();
+        Booking equal = fullBooking();
+        assertEquals(baseline, equal);
+        assertNotEquals(baseline, null);
+        assertNotEquals(baseline, "string");
+        assertTrue(baseline.equals(baseline));
+
+        assertBookingNotEquals(b -> b.setBookingId("DIFF"));
+        assertBookingNotEquals(b -> b.setTripType(TripType.ROUND_TRIP));
+        assertBookingNotEquals(b -> b.setOutboundFlightId("OUT2"));
+        assertBookingNotEquals(b -> b.setReturnFlight("RET2"));
+        assertBookingNotEquals(b -> b.setPnrOutbound("PO2"));
+        assertBookingNotEquals(b -> b.setPassengers(java.util.List.of()));
+        assertBookingNotEquals(b -> b.setWarnings(java.util.List.of("warn2")));
+        assertBookingNotEquals(b -> b.setPnrReturn("PR2"));
+        assertBookingNotEquals(b -> b.setContactName("Other"));
+        assertBookingNotEquals(b -> b.setContactEmail("other@example.com"));
+        assertBookingNotEquals(b -> b.setTotalPassengers(99));
+        assertBookingNotEquals(b -> b.setStatus(BookingStatus.CANCELLED));
+
+        baseline.hashCode();
+        equal.hashCode();
+        new Booking().hashCode();
+        assertNotEquals(baseline, new BookingSubclass());
+    }
+
+    @Test
+    void passenger_coversAllFieldComparisons() {
+        Passenger base = fullPassenger();
+        Passenger same = fullPassenger();
+        assertEquals(base, same);
+        assertTrue(base.equals(base));
+
+        assertPassengerNotEquals(p -> p.setPassengerId("DIFF"));
+        assertPassengerNotEquals(p -> p.setBookingId("B2"));
+        assertPassengerNotEquals(p -> p.setName("Other"));
+        assertPassengerNotEquals(p -> p.setAge(99));
+        assertPassengerNotEquals(p -> p.setGender(Gender.OTHER));
+        assertPassengerNotEquals(p -> p.setMeal(Meal.NON_VEG));
+        assertPassengerNotEquals(p -> p.setSeatOutbound("X1"));
+        assertPassengerNotEquals(p -> p.setSeatReturn("X2"));
+
+        base.hashCode();
+        same.hashCode();
+        new Passenger().hashCode();
+
+        Passenger constructed = new Passenger("ID", "BID", "Name", 20, Gender.MALE, Meal.VEG, "1A", "2B");
+        assertEquals("ID", constructed.getPassengerId());
+        PassengerSubclass sub = new PassengerSubclass();
+        assertNotEquals(base, sub);
+        assertNotEquals(sub, base);
+        assertNotEquals(new Passenger(), fullPassenger());
+    }
+
+    @Test
+    void bookingEvent_coversAllFieldComparisons() {
+        BookingEvent base = fullBookingEvent();
+        BookingEvent same = fullBookingEvent();
+        assertEquals(base, same);
+        assertTrue(base.equals(base));
+
+        assertBookingEventNotEquals(e -> e.setEventType(BookingEventType.CANCELLED));
+        assertBookingEventNotEquals(e -> e.setBookingId("DIFF"));
+        assertBookingEventNotEquals(e -> e.setPnrOutbound("PO2"));
+        assertBookingEventNotEquals(e -> e.setPnrReturn("PR2"));
+        assertBookingEventNotEquals(e -> e.setOutboundFlightId("OUT2"));
+        assertBookingEventNotEquals(e -> e.setReturnFlightId("RET2"));
+        assertBookingEventNotEquals(e -> e.setContactName("Name2"));
+        assertBookingEventNotEquals(e -> e.setContactEmail("c2@example.com"));
+        assertBookingEventNotEquals(e -> e.setTotalPassengers(5));
+        assertBookingEventNotEquals(e -> e.setStatus(BookingStatus.CANCELLED));
+        assertBookingEventNotEquals(e -> e.setTripType(TripType.ONE_WAY));
+        assertBookingEventNotEquals(e -> e.setOccurredAt(java.time.Instant.EPOCH));
+
+        base.hashCode();
+        same.hashCode();
+        new BookingEvent().hashCode();
+        BookingEventSubclass sub = new BookingEventSubclass();
+        assertNotEquals(base, sub);
+        assertNotEquals(sub, base);
+        assertNotEquals(new BookingEvent(), fullBookingEvent());
+        BookingEvent empty = new BookingEvent();
+        BookingEvent withId = new BookingEvent();
+        withId.setBookingId("X");
+        assertNotEquals(empty, withId);
+    }
+
+    private Booking fullBooking() {
+        Booking b = new Booking();
+        b.setBookingId("B1");
+        b.setTripType(TripType.ONE_WAY);
+        b.setOutboundFlightId("OUT");
+        b.setReturnFlight("RET");
+        b.setPnrOutbound("PO");
+        b.setPassengers(java.util.List.of(new Passenger()));
+        b.setWarnings(java.util.List.of("warn"));
+        b.setPnrReturn("PR");
+        b.setContactName("Name");
+        b.setContactEmail("email@example.com");
+        b.setTotalPassengers(2);
+        b.setStatus(BookingStatus.CONFIRMED);
+        return b;
+    }
+
+    private Passenger fullPassenger() {
+        Passenger p = new Passenger();
+        p.setPassengerId("P1");
+        p.setBookingId("B1");
+        p.setName("Name");
+        p.setAge(30);
+        p.setGender(Gender.MALE);
+        p.setMeal(Meal.VEG);
+        p.setSeatOutbound("1A");
+        p.setSeatReturn("2B");
+        return p;
+    }
+
+    private BookingEvent fullBookingEvent() {
+        return new BookingEvent(
+                BookingEventType.BOOKED,
+                "B1",
+                "PO",
+                "PR",
+                "OUT",
+                "RET",
+                "Name",
+                "email@example.com",
+                2,
+                BookingStatus.CONFIRMED,
+                TripType.ROUND_TRIP,
+                java.time.Instant.parse("2025-01-01T00:00:00Z")
+        );
+    }
+
+    private void assertBookingNotEquals(java.util.function.Consumer<Booking> mutator) {
+        Booking copy = fullBooking();
+        mutator.accept(copy);
+        assertNotEquals(fullBooking(), copy);
+    }
+
+    private void assertPassengerNotEquals(java.util.function.Consumer<Passenger> mutator) {
+        Passenger copy = fullPassenger();
+        mutator.accept(copy);
+        assertNotEquals(fullPassenger(), copy);
+    }
+
+    private void assertBookingEventNotEquals(java.util.function.Consumer<BookingEvent> mutator) {
+        BookingEvent copy = fullBookingEvent();
+        mutator.accept(copy);
+        assertNotEquals(fullBookingEvent(), copy);
     }
 
     private Booking booking(String id, String pnr, String outbound) {
@@ -95,5 +292,26 @@ class ModelEqualityTest {
                 TripType.ROUND_TRIP,
                 occurredAt
         );
+    }
+
+    private static class BookingSubclass extends Booking {
+        @Override
+        public boolean canEqual(Object other) {
+            return false;
+        }
+    }
+
+    private static class PassengerSubclass extends Passenger {
+        @Override
+        public boolean canEqual(Object other) {
+            return false;
+        }
+    }
+
+    private static class BookingEventSubclass extends BookingEvent {
+        @Override
+        public boolean canEqual(Object other) {
+            return false;
+        }
     }
 }

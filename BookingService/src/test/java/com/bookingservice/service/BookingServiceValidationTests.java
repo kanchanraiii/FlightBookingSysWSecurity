@@ -41,6 +41,17 @@ class BookingServiceValidationTests {
     }
 
     @Test
+    void bookFlightFailsWhenPassengersEmpty() {
+        BookingRequest req = new BookingRequest();
+        req.setTripType(TripType.ONE_WAY);
+        req.setPassengers(java.util.Collections.emptyList());
+
+        assertThatThrownBy(() -> bookingService.bookFlight("F1", req))
+                .isInstanceOf(ValidationException.class)
+                .hasMessageContaining("Passenger required");
+    }
+
+    @Test
     void bookFlightFailsWhenTripTypeMissing() {
         BookingRequest req = new BookingRequest();
         req.setPassengers(Collections.singletonList(new PassengerRequest()));
@@ -52,6 +63,12 @@ class BookingServiceValidationTests {
     @Test
     void getHistoryRejectsEmptyEmail() {
         StepVerifier.create(bookingService.getHistory(""))
+                .verifyError(ValidationException.class);
+    }
+
+    @Test
+    void getHistoryRejectsNullEmail() {
+        StepVerifier.create(bookingService.getHistory(null))
                 .verifyError(ValidationException.class);
     }
 }

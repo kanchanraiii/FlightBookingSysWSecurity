@@ -164,13 +164,6 @@
             </configuration>
         </execution>
     </executions>
-    <configuration>
-        <reports>
-            <xml enabled="true"/>
-            <html enabled="true"/>
-            <csv enabled="false"/>
-        </reports>
-    </configuration>
 </plugin>
 
             <plugin>
@@ -184,6 +177,14 @@
                             <version>${lombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>${argLine} -XX:+EnableDynamicAgentLoading</argLine>
                 </configuration>
             </plugin>
 
