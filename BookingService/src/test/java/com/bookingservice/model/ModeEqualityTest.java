@@ -19,7 +19,6 @@ class ModelEqualityTest {
         assertEquals(b1.hashCode(), b2.hashCode());
         assertNotEquals(b1, b3);
         assertNotNull(b1);
-        // compare with another Booking instead of a String
         assertNotEquals(booking("other", "PNR2", "FL-2"), b1);
         assertTrue(b1.toString().contains("PNR1"));
     }
@@ -29,9 +28,9 @@ class ModelEqualityTest {
         Booking left = new Booking();
         Booking right = new Booking();
 
-        assertEquals(left, right); // both null fields
+        assertEquals(left, right);
         right.setPnrReturn("X");
-        assertNotEquals(left, right); // null vs value branch
+        assertNotEquals(left, right);
         right.setPnrReturn(null);
         assertEquals(left, right);
     }
@@ -47,11 +46,10 @@ class ModelEqualityTest {
         assertEquals(p1.hashCode(), p2.hashCode());
         assertNotEquals(p1, p3);
         assertNotNull(p1);
-        // compare with another Passenger instead of a String
         assertNotEquals(passenger("other", "Other", "9Z"), p1);
         assertTrue(p1.toString().contains("John"));
         assertNotEquals(p1, p4);
-        assertEquals(p1, p1); // self check
+        assertEquals(p1, p1);
     }
 
     @Test
@@ -80,7 +78,6 @@ class ModelEqualityTest {
         assertEquals(e1.hashCode(), e2.hashCode());
         assertNotEquals(e1, e3);
         assertNotNull(e1);
-        // compare with another BookingEvent instead of a String
         assertNotEquals(bookingEvent("other", now.plusSeconds(5)), e1);
         assertTrue(e1.toString().contains("b1"));
     }
@@ -107,8 +104,7 @@ class ModelEqualityTest {
         Booking equal = fullBooking();
         assertEquals(baseline, equal);
         assertNotNull(baseline);
-        assertNotEquals("string", baseline);
-        // compare with a fresh instance rather than self to avoid tautology
+        assertNotEquals(new Booking(), baseline);
         assertEquals(baseline, fullBooking());
 
         assertBookingNotEquals(b -> b.setBookingId("DIFF"));
