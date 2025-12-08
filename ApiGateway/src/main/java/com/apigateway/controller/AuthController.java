@@ -28,25 +28,26 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<String> register(@RequestBody AuthRegisterRequest request) {
-        User user = new User();
-        user.setUsername(request.getUsername());
-        user.setPassword(encoder.encode(request.getPassword()));
-        user.setFullName(request.getFullName());
-        user.setEmail(request.getEmail());
-        user.setRole(request.getRole());
+        User user = new User(
+                null,
+                request.username(),
+                encoder.encode(request.password()),
+                request.fullName(),
+                request.email(),
+                request.role());
         return repo.save(user).thenReturn("User registered successfully");
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public Mono<String> login(@RequestBody AuthLoginRequest loginRequest) {
-        return repo.findByUsername(loginRequest.getUsername())
+        return repo.findByUsername(loginRequest.username())
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")))
                 .flatMap(user -> {
-                    if (!encoder.matches(loginRequest.getPassword(), user.getPassword())) {
+                    if (!encoder.matches(loginRequest.password(), user.password())) {
                         return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
                     }
-                    String token = jwtUtil.generateToken(user.getUsername(), user.getRole());
+                    String token = jwtUtil.generateToken(user.username(), user.role());
                     return Mono.just(token);
                 });
     }

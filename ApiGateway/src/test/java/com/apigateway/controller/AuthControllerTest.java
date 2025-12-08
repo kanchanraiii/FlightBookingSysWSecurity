@@ -54,7 +54,7 @@ class AuthControllerTest {
                 .expectNext("User registered successfully")
                 .verifyComplete();
 
-        verify(userRepository).save(argThat(saved -> !saved.getPassword().equals("password")));
+        verify(userRepository).save(argThat(saved -> !saved.password().equals("password")));
     }
 
     @Test
@@ -92,26 +92,14 @@ class AuthControllerTest {
     }
 
     private User buildUser(String id, String username, String password, Role role) {
-        User u = new User();
-        u.setId(id);
-        u.setUsername(username);
-        u.setPassword(password);
-        u.setRole(role);
-        return u;
+        return new User(id, username, password, null, null, role);
     }
 
     private AuthRegisterRequest buildRegister(String username, String password, Role role) {
-        AuthRegisterRequest req = new AuthRegisterRequest();
-        req.setUsername(username);
-        req.setPassword(password);
-        req.setRole(role);
-        return req;
+        return new AuthRegisterRequest(username, password, null, null, role);
     }
 
     private AuthLoginRequest buildLogin(String username, String password) {
-        AuthLoginRequest req = new AuthLoginRequest();
-        req.setUsername(username);
-        req.setPassword(password);
-        return req;
+        return new AuthLoginRequest(username, password);
     }
 }
