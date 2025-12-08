@@ -105,7 +105,8 @@ class ModelEqualityTest {
         assertEquals(baseline, equal);
         assertNotNull(baseline);
         assertNotEquals("string", baseline);
-        assertEquals(baseline, baseline);
+        // compare with a fresh instance rather than self to avoid tautology
+        assertEquals(baseline, fullBooking());
 
         assertBookingNotEquals(b -> b.setBookingId("DIFF"));
         assertBookingNotEquals(b -> b.setTripType(TripType.ROUND_TRIP));
@@ -131,7 +132,7 @@ class ModelEqualityTest {
         Passenger base = fullPassenger();
         Passenger same = fullPassenger();
         assertEquals(base, same);
-        assertEquals(base, base);
+        assertEquals(base, fullPassenger());
 
         assertPassengerNotEquals(p -> p.setPassengerId("DIFF"));
         assertPassengerNotEquals(p -> p.setBookingId("B2"));
@@ -159,7 +160,7 @@ class ModelEqualityTest {
         BookingEvent base = fullBookingEvent();
         BookingEvent same = fullBookingEvent();
         assertEquals(base, same);
-        assertEquals(base, base);
+        assertEquals(base, fullBookingEvent());
 
         assertBookingEventNotEquals(e -> e.setEventType(BookingEventType.CANCELLED));
         assertBookingEventNotEquals(e -> e.setBookingId("DIFF"));
