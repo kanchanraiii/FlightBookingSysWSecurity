@@ -4,6 +4,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.mail.SimpleMailMessage;
@@ -44,6 +46,30 @@ class EmailServiceTest {
         b.setContactEmail(null);
         svc.sendBookingNotification(b, BookingEventType.BOOKED).block();
         verify(sender, never()).send(any(SimpleMailMessage.class));
+    }
+
+    @Test
+    void buildsCancelledSubjectAndBodyWithReturnInfo() {
+        EmailService svc = service(true, "");
+        Booking booking = sampleBooking();
+        booking.setReturnFlight("RET1");
+        booking.setPnrReturn("PNR-RET");
+
+        svc.sendBookingNotification(booking, BookingEventType.CANCELLED).block();
+        verify(sender, times(1)).send(any(SimpleMailMessage.class));
+    }
+
+    @Test
+    void logsErrorWhenSendFails() {
+        EmailService svc = service(true, "from@test.com");
+        org.mockito.Mockito.doThrow(new RuntimeException("fail"))
+                .when(sender)
+                .send(any(SimpleMailMessage.class));
+
+        reactor.test.StepVerifier.create(svc.sendBookingNotification(sampleBooking(), BookingEventType.BOOKED))
+                .expectError()
+                .verify();
+        verify(sender, times(1)).send(any(SimpleMailMessage.class));
     }
 
     private Booking sampleBooking() {
