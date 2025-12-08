@@ -109,6 +109,19 @@ class AddFlightRequestTest {
         assertTrue(a.toString().contains("AL1"));
     }
 
+    @Test
+    void equalsHandlesAllNullsSymmetrically() {
+        AddFlightRequest left = new AddFlightRequest();
+        AddFlightRequest right = new AddFlightRequest();
+
+        // both fully null should be equal and share hash branches
+        assertEquals(left, right);
+        assertEquals(left.hashCode(), right.hashCode());
+
+        right.setAirlineCode("X");
+        assertNotEquals(left, right); // null vs value branch
+    }
+
     private AddFlightRequest cloneRequest() {
         AddFlightRequest req = new AddFlightRequest();
         req.setAirlineCode("AL1");

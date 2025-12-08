@@ -97,6 +97,18 @@ class FlightsTest {
         assertFalse(f1.toString().isEmpty());
     }
 
+    @Test
+    void equalsHandlesAllNullsSymmetrically() {
+        Flights left = new Flights();
+        Flights right = new Flights();
+
+        assertEquals(left, right);
+        assertEquals(left.hashCode(), right.hashCode());
+
+        right.setFlightId("DIFF");
+        assertNotEquals(left, right); // null vs value branch
+    }
+
     private Flights copy(Flights original) {
         Flights f = new Flights();
         f.setFlightId(original.getFlightId());
