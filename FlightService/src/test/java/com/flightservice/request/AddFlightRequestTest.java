@@ -1,6 +1,7 @@
 package com.flightservice.request;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -38,5 +39,41 @@ class AddFlightRequestTest {
         assertEquals(150, req.getTotalSeats());
         assertEquals(199.99f, req.getPrice());
         assertTrue(req.isMealAvailable());
+    }
+
+    @Test
+    void equalsAndHashCodeCoverBranches() {
+        AddFlightRequest a = new AddFlightRequest();
+        a.setAirlineCode("AL1");
+        a.setFlightNumber("FN123");
+        a.setSourceCity(Cities.DELHI);
+        a.setDestinationCity(Cities.MUMBAI);
+        a.setDepartureDate(LocalDate.of(2025, 1, 1));
+        a.setDepartureTime(LocalTime.NOON);
+        a.setArrivalDate(LocalDate.of(2025, 1, 1));
+        a.setArrivalTime(LocalTime.of(15, 0));
+        a.setTotalSeats(100);
+        a.setPrice(300f);
+        a.setMealAvailable(true);
+
+        AddFlightRequest b = new AddFlightRequest();
+        b.setAirlineCode("AL1");
+        b.setFlightNumber("FN123");
+        b.setSourceCity(Cities.DELHI);
+        b.setDestinationCity(Cities.MUMBAI);
+        b.setDepartureDate(LocalDate.of(2025, 1, 1));
+        b.setDepartureTime(LocalTime.NOON);
+        b.setArrivalDate(LocalDate.of(2025, 1, 1));
+        b.setArrivalTime(LocalTime.of(15, 0));
+        b.setTotalSeats(100);
+        b.setPrice(300f);
+        b.setMealAvailable(true);
+
+        assertEquals(a, b);
+        assertEquals(a.hashCode(), b.hashCode());
+        assertNotEquals(a, null);
+        b.setFlightNumber("DIFF");
+        assertNotEquals(a, b);
+        assertTrue(a.toString().contains("AL1"));
     }
 }

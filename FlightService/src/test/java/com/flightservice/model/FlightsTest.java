@@ -2,6 +2,7 @@ package com.flightservice.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -40,5 +41,45 @@ class FlightsTest {
         assertEquals(180, flight.getTotalSeats());
         assertEquals(175, flight.getAvailableSeats());
         assertEquals(249.50, flight.getPrice());
+    }
+
+    @Test
+    void equalsAndHashCodeCoverBranches() {
+        Flights f1 = new Flights();
+        f1.setFlightId("F1");
+        f1.setFlightNumber("FN123");
+        f1.setAirlineCode("AL1");
+        f1.setSourceCity(Cities.DELHI);
+        f1.setDestinationCity(Cities.MUMBAI);
+        f1.setDepartureDate(LocalDate.of(2025, 1, 1));
+        f1.setArrivalDate(LocalDate.of(2025, 1, 1));
+        f1.setDepartureTime(LocalTime.of(10, 0));
+        f1.setArrivalTime(LocalTime.of(12, 30));
+        f1.setMealAvailable(false);
+        f1.setTotalSeats(180);
+        f1.setAvailableSeats(175);
+        f1.setPrice(249.50);
+
+        Flights f2 = new Flights();
+        f2.setFlightId("F1");
+        f2.setFlightNumber("FN123");
+        f2.setAirlineCode("AL1");
+        f2.setSourceCity(Cities.DELHI);
+        f2.setDestinationCity(Cities.MUMBAI);
+        f2.setDepartureDate(LocalDate.of(2025, 1, 1));
+        f2.setArrivalDate(LocalDate.of(2025, 1, 1));
+        f2.setDepartureTime(LocalTime.of(10, 0));
+        f2.setArrivalTime(LocalTime.of(12, 30));
+        f2.setMealAvailable(false);
+        f2.setTotalSeats(180);
+        f2.setAvailableSeats(175);
+        f2.setPrice(249.50);
+
+        assertEquals(f1, f2);
+        assertEquals(f1.hashCode(), f2.hashCode());
+        assertNotEquals(f1, null);
+        f2.setFlightId("DIFF");
+        assertNotEquals(f1, f2);
+        assertFalse(f1.toString().isEmpty());
     }
 }
