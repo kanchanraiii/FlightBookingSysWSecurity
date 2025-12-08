@@ -2,6 +2,8 @@ package com.flightservice.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,13 +23,16 @@ class AirlineTest {
         same.setAirlineName("Airline One");
         assertEquals(airline, same);
         assertEquals(airline.hashCode(), same.hashCode());
-        assertNotEquals(airline, null);
-        assertNotEquals(airline, "x");
+
+        assertNotNull(airline);              
+        assertFalse(airline.equals("x"));    
+
         Airline different = new Airline();
         different.setAirlineCode("DIFF");
         different.setAirlineName("Other");
         assertNotEquals(airline, different);
         assertNotEquals(airline, mutate(same, a -> a.setAirlineName("Changed")));
+
         airline.toString();
     }
 

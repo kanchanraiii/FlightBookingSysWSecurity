@@ -3,6 +3,8 @@ package com.flightservice.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +23,7 @@ class SeatsTest {
         assertEquals("F1", seats.getFlightId());
         assertEquals("12A", seats.getSeatNo());
         assertFalse(seats.isAvailable());
-        assertEquals(true, seats.isBooked());
+        assertTrue(seats.isBooked());
 
         Seats same = new Seats();
         same.setSeatId("S1");
@@ -32,13 +34,16 @@ class SeatsTest {
 
         assertEquals(seats, same);
         assertEquals(seats.hashCode(), same.hashCode());
-        assertNotEquals(seats, null);
-        assertNotEquals(seats, "x");
+
+        assertNotNull(seats);
+        assertFalse(seats.equals(new Object()));
+
         assertNotEquals(seats, mutate(copy(seats), s -> s.setSeatId("DIFF")));
         assertNotEquals(seats, mutate(copy(seats), s -> s.setFlightId("DIFF")));
         assertNotEquals(seats, mutate(copy(seats), s -> s.setSeatNo("1B")));
         assertNotEquals(seats, mutate(copy(seats), s -> s.setAvailable(true)));
         assertNotEquals(seats, mutate(copy(seats), s -> s.setBooked(false)));
+
         seats.toString();
     }
 
