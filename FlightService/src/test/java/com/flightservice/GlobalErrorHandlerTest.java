@@ -78,6 +78,17 @@ class GlobalErrorHandlerTests {
     }
 
     @Test
+    @DisplayName("Handles invalid format for unknown type defaults to generic message")
+    void handleInvalidUnknownType() {
+        InvalidFormatException cause = new InvalidFormatException(null, "bad", "abc", Integer.class);
+        HttpMessageNotReadableException ex = new HttpMessageNotReadableException("JSON error", cause, null);
+
+        StepVerifier.create(handler.handleInvalidJson(ex))
+                .assertNext(map -> assertEquals("Invalid JSON request", map.get("error")))
+                .verifyComplete();
+    }
+
+    @Test
     @DisplayName("Handles invalid date format")
     void handleInvalidDate() {
         DateTimeParseException cause = new DateTimeParseException("Bad date", "2025-13-01", 5);

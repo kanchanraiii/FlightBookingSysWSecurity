@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import com.flightservice.exceptions.ResourceNotFoundException;
 import com.flightservice.exceptions.ValidationException;
 import com.flightservice.model.Airline;
 import com.flightservice.model.Cities;
@@ -84,6 +85,15 @@ class FlightServiceValidationTest {
     }
 
     @Test
+    void flightNumberBlank() {
+        request.setFlightNumber("   ");
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
     void sourceCityMissing() {
         request.setSourceCity(null);
 
@@ -121,8 +131,26 @@ class FlightServiceValidationTest {
     }
 
     @Test
+    void totalSeatsNull() {
+        request.setTotalSeats(null);
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
     void priceInvalid() {
         request.setPrice(-1f);
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void priceNull() {
+        request.setPrice(null);
 
         StepVerifier.create(flightService.addInventory(request))
                 .expectError(ValidationException.class)
@@ -141,6 +169,61 @@ class FlightServiceValidationTest {
     @Test
     void arrivalBeforeDeparture() {
         request.setArrivalTime(LocalTime.of(8, 0));
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void departureDateOrTimeMissing() {
+        request.setDepartureDate(null);
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void departureTimeMissing() {
+        request.setDepartureTime(null);
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void arrivalDateOrTimeMissing() {
+        request.setArrivalDate(null);
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void arrivalTimeMissing() {
+        request.setArrivalTime(null);
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ValidationException.class)
+                .verify();
+    }
+
+    @Test
+    void airlineNotFound() {
+        when(airlineRepository.findById(anyString())).thenReturn(Mono.empty());
+
+        StepVerifier.create(flightService.addInventory(request))
+                .expectError(ResourceNotFoundException.class)
+                .verify();
+    }
+
+    @Test
+    void duplicateFlightFails() {
+        when(flightRepository.findFirstByFlightNumberAndDepartureDate(any(), any()))
+                .thenReturn(Mono.just(java.util.Map.of("flightId", "F1")));
 
         StepVerifier.create(flightService.addInventory(request))
                 .expectError(ValidationException.class)
