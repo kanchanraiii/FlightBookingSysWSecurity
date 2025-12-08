@@ -3,6 +3,7 @@ package com.bookingservice.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class ModelEqualityTest {
         assertEquals(b1.hashCode(), b2.hashCode());
         assertNotEquals(b1, b3);
         assertNotEquals(null, b1);
-        assertNotEquals("string", b1);
+        assertFalse(b1.equals("string"));
         assertTrue(b1.toString().contains("PNR1"));
     }
 
@@ -45,7 +46,7 @@ class ModelEqualityTest {
         assertEquals(p1.hashCode(), p2.hashCode());
         assertNotEquals(p1, p3);
         assertNotEquals(null, p1);
-        assertNotEquals("string", p1);
+        assertFalse(p1.equals("string"));
         assertTrue(p1.toString().contains("John"));
         assertNotEquals(p1, p4);
         assertEquals(p1, p1); // self check
@@ -77,7 +78,7 @@ class ModelEqualityTest {
         assertEquals(e1.hashCode(), e2.hashCode());
         assertNotEquals(e1, e3);
         assertNotEquals(null, e1);
-        assertNotEquals("string", e1);
+        assertFalse(e1.equals("string"));
         assertTrue(e1.toString().contains("b1"));
     }
 
@@ -103,7 +104,7 @@ class ModelEqualityTest {
         Booking equal = fullBooking();
         assertEquals(baseline, equal);
         assertNotEquals(baseline, null);
-        assertNotEquals(baseline, "string");
+        assertFalse(baseline.equals("string"));
         assertTrue(baseline.equals(baseline));
 
         assertBookingNotEquals(b -> b.setBookingId("DIFF"));
