@@ -1,0 +1,17 @@
+com\bookingservice\EmailServiceTest.class
+com\bookingservice\model\ModelEqualityTest.class
+com\bookingservice\BookingServiceTests.class
+com\bookingservice\GlobalErrorHandlerTest.class
+com\bookingservice\controller\MainControllerTest.class
+com\bookingservice\exceptions\GlobalErrorHandlerTest.class
+com\bookingservice\service\BookingServiceTest.class
+com\bookingservice\FlightClientTest.class
+com\bookingservice\MainControllerTest.class
+com\bookingservice\service\TicketServiceTest.class
+com\bookingservice\ModelCoverageTest.class
+com\bookingservice\TicketServiceTest.class
+com\bookingservice\client\FlightClientTest$StubExchangeFunction.class
+com\bookingservice\model\ModelCoverageTest.class
+com\bookingservice\BookingEventProducerTest.class
+com\bookingservice\client\FlightClientTest.class
+com\bookingservice\ExceptionClassesTest.class
