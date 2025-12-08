@@ -21,12 +21,15 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - "9092:9092"
+      - "9092:9092"   # internal listener for other containers
+      - "19092:19092" # host listener for local clients
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:19092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:19092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   eureka-server:
@@ -63,6 +66,14 @@ services:
       SPRING_DATA_MONGODB_PORT: 27017
       SPRING_CONFIG_IMPORT: "configserver:http://config-server:8888"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka"
+      SPRING_CLOUD_GATEWAY_ROUTES_0_ID: booking-service
+      SPRING_CLOUD_GATEWAY_ROUTES_0_URI: lb://BOOKING-SERVICE
+      SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES_0: Path=/booking/**
+      SPRING_CLOUD_GATEWAY_ROUTES_0_FILTERS_0: StripPrefix=1
+      SPRING_CLOUD_GATEWAY_ROUTES_1_ID: flight-service
+      SPRING_CLOUD_GATEWAY_ROUTES_1_URI: lb://FLIGHT-SERVICE
+      SPRING_CLOUD_GATEWAY_ROUTES_1_PREDICATES_0: Path=/flight/**
+      SPRING_CLOUD_GATEWAY_ROUTES_1_FILTERS_0: StripPrefix=1
 
   flight-service:
     build: ./FlightService
