@@ -8,7 +8,10 @@ import org.springframework.stereotype.Component;
 
 import com.bookingservice.model.BookingEvent;
 
+import java.time.Duration;
+
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Component
 public class BookingEventProducer {
@@ -25,13 +28,17 @@ public class BookingEventProducer {
         this.topic = topic;
     }
 
-    public Mono<Void> publish(BookingEvent event) {
+    public Mono<Boolean> publish(BookingEvent event) {
         if (event == null || topic == null || topic.isBlank()) {
-            return Mono.empty();
+            return Mono.just(true);
         }
-        return Mono.fromFuture(kafkaTemplate.send(topic, event))
+        return Mono.fromCallable(() -> kafkaTemplate.send(topic, event))
+                .subscribeOn(Schedulers.boundedElastic())
+                .timeout(Duration.ofSeconds(5))
+                .flatMap(sendFuture -> Mono.fromFuture(sendFuture))
+                .timeout(Duration.ofSeconds(5))
+                .map(ignored -> true)
                 .doOnError(ex -> log.error("Failed to publish booking event", ex))
-                .onErrorResume(ex -> Mono.empty())
-                .then();
+                .onErrorResume(ex -> Mono.just(false));
     }
 }

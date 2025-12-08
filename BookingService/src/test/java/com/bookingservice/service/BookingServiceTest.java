@@ -73,8 +73,10 @@ class BookingServiceTest {
     void setUp() {
         bookingIdSequence = new AtomicInteger();
         when(passengerRepository.saveAll(any(Flux.class))).thenReturn(Flux.empty());
-        when(eventProducer.publish(any())).thenReturn(Mono.empty());
+        when(eventProducer.publish(any())).thenReturn(Mono.just(true));
         when(emailService.sendBookingNotification(any(), any())).thenReturn(Mono.empty());
+        when(passengerRepository.deleteByBookingId(anyString())).thenReturn(Mono.empty());
+        when(bookingRepository.deleteById(anyString())).thenReturn(Mono.empty());
         when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> {
             Booking toSave = invocation.getArgument(0);
             if (toSave.getBookingId() == null) {
