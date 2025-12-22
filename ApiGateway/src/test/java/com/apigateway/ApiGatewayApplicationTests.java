@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Import;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.apigateway.repository.UserRepository;
+import com.apigateway.repository.PasswordResetTokenRepository;
+import com.apigateway.kafka.PasswordResetProducer;
+import org.springframework.mail.javamail.JavaMailSender;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.NONE,
@@ -28,6 +31,15 @@ class ApiGatewayApplicationTests {
 
     @MockBean
     private UserRepository userRepository;
+
+    @MockBean
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @MockBean
+    private PasswordResetProducer passwordResetProducer;
+
+    @MockBean
+    private JavaMailSender javaMailSender;
 
     @TestConfiguration
     static class TestSecurityConfig {

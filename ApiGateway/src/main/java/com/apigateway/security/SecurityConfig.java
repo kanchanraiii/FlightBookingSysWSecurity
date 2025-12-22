@@ -30,7 +30,9 @@ public class SecurityConfig {
                 .addFilterAt(jwtAuthenticationFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .pathMatchers("/auth/**", "/api/auth/**").permitAll()
+                        .pathMatchers("/auth/register", "/auth/login",
+                                "/auth/password-reset/request",
+                                "/auth/password-reset/confirm").permitAll()
                         .pathMatchers(HttpMethod.GET,
                                 "/flight/api/flight/getAllAirlines",
                                 "/flight/api/flight/getAllFlights").permitAll()
@@ -38,6 +40,7 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST,
                                 "/flight/api/flight/addAirline",
                                 "/flight/api/flight/airline/inventory/add").hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PUT, "/auth/update-password").hasRole("USER")
                         .pathMatchers(HttpMethod.POST, "/booking/api/booking/**").hasRole("USER")
                         .pathMatchers(HttpMethod.GET,
                                 "/booking/api/booking/ticket/**",

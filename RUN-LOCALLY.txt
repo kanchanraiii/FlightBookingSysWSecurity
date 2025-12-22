@@ -18,6 +18,9 @@ Base folder: C:\path\to\FlightBookingSysWSecurity
    $env:SPRING_PROFILES_ACTIVE="local"
    $env:SPRING_CONFIG_IMPORT="optional:configserver:http://localhost:8888"
    $env:SPRING_CLOUD_CONFIG_FAIL_FAST="false"
+   $env:SPRING_DATA_MONGODB_HOST="localhost"
+   $env:SPRING_DATA_MONGODB_PORT="27017"
+   $env:SPRING_KAFKA_BOOTSTRAP_SERVERS="localhost:19092"
    mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
 
 4) Flight Service (fail-fast disabled, local config)
@@ -40,6 +43,9 @@ Replace the env lines above with:
    set SPRING_PROFILES_ACTIVE=local
    set SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888
    set SPRING_CLOUD_CONFIG_FAIL_FAST=false
+   set SPRING_DATA_MONGODB_HOST=localhost
+   set SPRING_DATA_MONGODB_PORT=27017
+   set SPRING_KAFKA_BOOTSTRAP_SERVERS=localhost:19092
 
 Notes
 -----

@@ -68,7 +68,10 @@ public class JwtAuthenticationFilter implements WebFilter {
     }
 
     private boolean isPublic(String path, HttpMethod method) {
-        return path.startsWith("/auth")
+        boolean authPublic = path.equals("/auth/login") || path.equals("/auth/register");
+        boolean passwordResetPublic = path.equals("/auth/password-reset/request") || path.equals("/auth/password-reset/confirm");
+        return authPublic
+                || passwordResetPublic
                 || path.startsWith("/api/auth")
                 || (method == HttpMethod.GET &&
                 (path.startsWith("/flight/api/flight/getAllAirlines")
