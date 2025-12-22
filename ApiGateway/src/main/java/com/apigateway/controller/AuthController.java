@@ -2,6 +2,7 @@ package com.apigateway.controller;
 
 import com.apigateway.dto.AuthLoginRequest;
 import com.apigateway.dto.AuthRegisterRequest;
+import com.apigateway.dto.UpdatePasswordRequest;
 import com.apigateway.model.User;
 import com.apigateway.repository.UserRepository;
 import com.apigateway.security.JwtUtil;
@@ -25,6 +26,7 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    // to register a user
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<String> register(@RequestBody AuthRegisterRequest request) {
@@ -38,6 +40,7 @@ public class AuthController {
         return repo.save(user).thenReturn("User registered successfully");
     }
 
+    // to login a user
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public Mono<String> login(@RequestBody AuthLoginRequest loginRequest) {
@@ -51,4 +54,56 @@ public class AuthController {
                     return Mono.just(token);
                 });
     }
+    
+    // to update password
+    @PutMapping("/update-password")
+    @ResponseStatus(HttpStatus.OK)
+    public Mono<String> updatePassword(
+            @RequestBody UpdatePasswordRequest request
+    ) {
+        return repo.findByUsername(request.username())
+                .switchIfEmpty(Mono.error(
+                        new ResponseStatusException(
+                                HttpStatus.NOT_FOUND,
+                                "User not found"
+                        )
+                ))
+                .flatMap(user -> {
+
+                    // email check
+                    if (!user.email().equals(request.email())) {
+                        return Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Email does not match"
+                                )
+                        );
+                    }
+
+                    // old password check
+                    if (!encoder.matches(request.oldPassword(), user.password())) {
+                        return Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.BAD_REQUEST,
+                                        "Old password is incorrect"
+                                )
+                        );
+                    }
+
+                    // update password (record - create new instance)
+                    User updatedUser = new User(
+                            user.id(),
+                            user.username(),
+                            encoder.encode(request.newPassword()),
+                            user.fullName(),
+                            user.email(),
+                            user.role()
+                    );
+
+                    return repo.save(updatedUser)
+                            .thenReturn("Password updated successfully");
+                });
+    }
+
+
 }

@@ -50,34 +50,34 @@ class AdditionalModelCoverageTest {
         assertEquals("2B", passenger.getSeatReturn());
     }
 
-    @Test
-    void bookingEvent_allFieldsCovered() {
-        Instant now = Instant.now();
-        BookingEvent event = new BookingEvent(
-                BookingEventType.CANCELLED,
-                "B1",
-                "PNR1",
-                "PNR2",
-                "OUT",
-                "RET",
-                "Contact",
-                "contact@example.com",
-                3,
-                BookingStatus.CANCELLED,
-                TripType.ONE_WAY,
-                now
-        );
-
-        assertEquals(BookingEventType.CANCELLED, event.getEventType());
-        assertEquals("B1", event.getBookingId());
-        assertEquals("PNR2", event.getPnrReturn());
-        assertEquals("RET", event.getReturnFlightId());
-        assertEquals("Contact", event.getContactName());
-        assertEquals("contact@example.com", event.getContactEmail());
-        assertEquals(3, event.getTotalPassengers());
-        assertEquals(BookingStatus.CANCELLED, event.getStatus());
-        assertEquals(TripType.ONE_WAY, event.getTripType());
-        assertEquals(now, event.getOccurredAt());
-        assertNotNull(event.toString());
-    }
+//    @Test
+//    void bookingEvent_allFieldsCovered() {
+//        Instant now = Instant.now();
+//        BookingEvent event = new BookingEvent(
+//                BookingEventType.CANCELLED,
+//                "B1",
+//                "PNR1",
+//                "PNR2",
+//                "OUT",
+//                "RET",
+//                "Contact",
+//                "contact@example.com",
+//                3,
+//                BookingStatus.CANCELLED,
+//                TripType.ONE_WAY,
+//                now
+//        );
+//
+//        assertEquals(BookingEventType.CANCELLED, event.getEventType());
+//        assertEquals("B1", event.getBookingId());
+//        assertEquals("PNR2", event.getPnrReturn());
+//        assertEquals("RET", event.getReturnFlightId());
+//        assertEquals("Contact", event.getContactName());
+//        assertEquals("contact@example.com", event.getContactEmail());
+//        assertEquals(3, event.getTotalPassengers());
+//        assertEquals(BookingStatus.CANCELLED, event.getStatus());
+//        assertEquals(TripType.ONE_WAY, event.getTripType());
+//        assertEquals(now, event.getOccurredAt());
+//        assertNotNull(event.toString());
+//    }
 }

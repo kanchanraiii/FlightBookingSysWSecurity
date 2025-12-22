@@ -38,7 +38,7 @@ public class FlightService {
     }
 
     // add a flight in db
-    public Mono<Map<String, String>> addInventory(AddFlightRequest req) {
+    public Mono<Object> addInventory(AddFlightRequest req) {
 
         return validateRequest(req)
                 .then(Mono.defer(() -> validateDates(req)))
@@ -137,12 +137,12 @@ public class FlightService {
     }
 
     // to generate seats
-    private Mono<Void> generateSeats(String flightId, int totalSeats) {
+    private Mono<Void> generateSeats(Object object, int totalSeats) {
         List<Seats> seats = new ArrayList<>();
 
         for (int i = 1; i <= totalSeats; i++) {
             Seats s = new Seats();
-            s.setFlightId(flightId);
+            s.setFlightId((String) object);
             s.setSeatNo("S" + i);
             s.setBooked(false);
             seats.add(s);
