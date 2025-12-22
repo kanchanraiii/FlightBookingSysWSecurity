@@ -1,32 +1,47 @@
 
-Startup order (open a terminal per service)
-------------------------------------------
+Windows (PowerShell) startup order (open one terminal per service)
+------------------------------------------------------------------
+Base folder: C:\path\to\FlightBookingSysWSecurity
+
 1) Config Server
-   cd ConfigServerFlightBooking
-   SPRING_PROFILES_ACTIVE=local mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
-
-2) Eureka Server
-   cd FlightBookingEurekaServer
-   SPRING_PROFILES_ACTIVE=local mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
-
-3) Booking Service
-   cd BookingService
-   SPRING_PROFILES_ACTIVE=local \
-   SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888 \
-   SPRING_CLOUD_CONFIG_FAIL_FAST=false \
+   cd C:\path\to\FlightBookingSysWSecurity\ConfigServerFlightBooking
+   $env:SPRING_PROFILES_ACTIVE="local"
    mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
 
-4) Flight Service
-   cd FlightService
-   SPRING_PROFILES_ACTIVE=local \
-   SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888 \
-   SPRING_CLOUD_CONFIG_FAIL_FAST=false \
+2) Eureka Server
+   cd C:\path\to\FlightBookingSysWSecurity\FlightBookingEurekaServer
+   $env:SPRING_PROFILES_ACTIVE="local"
+   mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+
+3) Booking Service (fail-fast disabled, local config)
+   cd C:\path\to\FlightBookingSysWSecurity\BookingService
+   $env:SPRING_PROFILES_ACTIVE="local"
+   $env:SPRING_CONFIG_IMPORT="optional:configserver:http://localhost:8888"
+   $env:SPRING_CLOUD_CONFIG_FAIL_FAST="false"
+   mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+
+4) Flight Service (fail-fast disabled, local config)
+   cd C:\path\to\FlightBookingSysWSecurity\FlightService
+   $env:SPRING_PROFILES_ACTIVE="local"
+   $env:SPRING_CONFIG_IMPORT="optional:configserver:http://localhost:8888"
+   $env:SPRING_CLOUD_CONFIG_FAIL_FAST="false"
    mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
 
 5) API Gateway (wait ~20s after step 4)
-   cd ApiGateway
-   SPRING_PROFILES_ACTIVE=local \
-   SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888 \
-   SPRING_CLOUD_CONFIG_FAIL_FAST=false \
+   cd C:\path\to\FlightBookingSysWSecurity\ApiGateway
+   $env:SPRING_PROFILES_ACTIVE="local"
+   $env:SPRING_CONFIG_IMPORT="optional:configserver:http://localhost:8888"
+   $env:SPRING_CLOUD_CONFIG_FAIL_FAST="false"
    mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
 
+cmd.exe equivalents
+-------------------
+Replace the env lines above with:
+   set SPRING_PROFILES_ACTIVE=local
+   set SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888
+   set SPRING_CLOUD_CONFIG_FAIL_FAST=false
+
+Notes
+-----
+- Make sure Config Server is up before others; keep MongoDB reachable on localhost:27017 (or set SPRING_DATA_MONGODB_HOST/PORT per service if different).
+- Kafka defaults to localhost:19092 for local profile in ApiGateway; adjust SPRING_KAFKA_BOOTSTRAP_SERVERS if needed. Fix port mappings if using Dockerized brokers.
