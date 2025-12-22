@@ -1,0 +1,32 @@
+
+Startup order (open a terminal per service)
+------------------------------------------
+1) Config Server
+   cd ConfigServerFlightBooking
+   SPRING_PROFILES_ACTIVE=local mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+
+2) Eureka Server
+   cd FlightBookingEurekaServer
+   SPRING_PROFILES_ACTIVE=local mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+
+3) Booking Service
+   cd BookingService
+   SPRING_PROFILES_ACTIVE=local \
+   SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888 \
+   SPRING_CLOUD_CONFIG_FAIL_FAST=false \
+   mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+
+4) Flight Service
+   cd FlightService
+   SPRING_PROFILES_ACTIVE=local \
+   SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888 \
+   SPRING_CLOUD_CONFIG_FAIL_FAST=false \
+   mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+
+5) API Gateway (wait ~20s after step 4)
+   cd ApiGateway
+   SPRING_PROFILES_ACTIVE=local \
+   SPRING_CONFIG_IMPORT=optional:configserver:http://localhost:8888 \
+   SPRING_CLOUD_CONFIG_FAIL_FAST=false \
+   mvn spring-boot:run -Dspring-boot.run.profiles=local -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=local"
+

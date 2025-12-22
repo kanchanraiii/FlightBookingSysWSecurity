@@ -26,9 +26,8 @@ public class Flights {
     private int totalSeats;
     private int availableSeats;
     private double price;
-	public Object getFlightId() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getFlightId() {
+		return flightId;
 	}
 	public String getFlightNumber() {
 		return flightNumber;

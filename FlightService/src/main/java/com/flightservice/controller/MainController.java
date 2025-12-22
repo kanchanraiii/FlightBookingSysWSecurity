@@ -68,7 +68,7 @@ public class MainController {
 	    // to add a flight
 		@PostMapping("/airline/inventory/add")
 		@ResponseStatus(HttpStatus.CREATED)
-		public Mono<Object> addFlight(@RequestBody AddFlightRequest request) {
+		public Mono<Map<String, String>> addFlight(@RequestBody AddFlightRequest request) {
 		    return flightService.addInventory(request);
 		}
 

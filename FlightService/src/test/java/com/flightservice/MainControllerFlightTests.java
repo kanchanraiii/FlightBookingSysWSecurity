@@ -37,7 +37,7 @@ class MainControllerFlightTests {
                 .thenReturn(Mono.just(Map.of("flightId", "F123")));
 
         StepVerifier.create(controller.addFlight(new AddFlightRequest()))
-                .expectNextMatches(map -> "F123".equals(map.get("flightId")))
+                .expectNextMatches((Map<String, String> map) -> "F123".equals(map.get("flightId")))
                 .verifyComplete();
     }
 

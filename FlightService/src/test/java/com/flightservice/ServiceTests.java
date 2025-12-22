@@ -154,7 +154,7 @@ class ServiceLayerTest {
         when(seatsRepository.saveAll(anyList())).thenReturn(Flux.just(new Seats()));
 
         StepVerifier.create(flightService.addInventory(addFlightRequest))
-                .expectNextMatches(m -> m.get("flightId").equals("F1"))
+                .expectNextMatches((java.util.Map<String, String> m) -> "F1".equals(m.get("flightId")))
                 .verifyComplete();
     }
 
