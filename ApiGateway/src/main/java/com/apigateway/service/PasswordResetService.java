@@ -76,6 +76,7 @@ public class PasswordResetService {
                             if (encoder.matches(request.newPassword(), user.password())) {
                                 return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password must differ from old"));
                             }
+                            Instant createdAt = user.createdAt() != null ? user.createdAt() : Instant.now();
 
                             PasswordResetToken used = new PasswordResetToken(
                                     token.id(),
@@ -91,7 +92,8 @@ public class PasswordResetService {
                                     encoder.encode(request.newPassword()),
                                     user.fullName(),
                                     user.email(),
-                                    user.role()
+                                    user.role(),
+                                    createdAt
                             );
 
                             return tokenRepository.save(used)

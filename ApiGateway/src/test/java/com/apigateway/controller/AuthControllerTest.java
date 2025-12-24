@@ -15,8 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.server.ResponseStatusException;
+import java.time.Instant;
 
 import com.apigateway.dto.AuthLoginRequest;
+import com.apigateway.dto.AuthLoginResponse;
 import com.apigateway.dto.AuthRegisterRequest;
 import com.apigateway.model.Role;
 import com.apigateway.model.User;
@@ -54,18 +56,25 @@ class AuthControllerTest {
                 .expectNext("User registered successfully")
                 .verifyComplete();
 
-        verify(userRepository).save(argThat(saved -> !saved.password().equals("password")));
+        verify(userRepository).save(argThat(saved -> !saved.password().equals("password")
+                && saved.createdAt() != null));
     }
 
     @Test
     void loginSucceedsAndReturnsToken() {
         String encoded = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("password");
-        User stored = buildUser("1", "alice", encoded, Role.ROLE_USER);
+        Instant createdAt = Instant.parse("2024-01-01T00:00:00Z");
+        User stored = new User("1", "alice", encoded, null, null, Role.ROLE_USER, createdAt);
         when(userRepository.findByUsername("alice")).thenReturn(Mono.just(stored));
         when(jwtUtil.generateToken("alice", Role.ROLE_USER)).thenReturn("token123");
 
         StepVerifier.create(controller.login(buildLogin("alice", "password")))
-                .expectNext("token123")
+                .expectNextMatches(resp -> {
+                    assertThat(resp).isInstanceOf(AuthLoginResponse.class);
+                    assertThat(resp.token()).isEqualTo("token123");
+                    assertThat(resp.createdAt()).isEqualTo(createdAt);
+                    return true;
+                })
                 .verifyComplete();
     }
 
@@ -92,7 +101,7 @@ class AuthControllerTest {
     }
 
     private User buildUser(String id, String username, String password, Role role) {
-        return new User(id, username, password, null, null, role);
+        return new User(id, username, password, null, null, role, Instant.parse("2024-01-01T00:00:00Z"));
     }
 
     private AuthRegisterRequest buildRegister(String username, String password, Role role) {

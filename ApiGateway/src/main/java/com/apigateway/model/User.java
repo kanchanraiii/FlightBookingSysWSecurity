@@ -1,5 +1,7 @@
 package com.apigateway.model;
 
+import java.time.Instant;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,5 +12,6 @@ public record User(
         String password,
         String fullName,
         String email,
-        Role role
+        Role role,
+        Instant createdAt
 ) { }

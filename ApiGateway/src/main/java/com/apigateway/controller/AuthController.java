@@ -1,6 +1,7 @@
 package com.apigateway.controller;
 
 import com.apigateway.dto.AuthLoginRequest;
+import com.apigateway.dto.AuthLoginResponse;
 import com.apigateway.dto.AuthRegisterRequest;
 import com.apigateway.dto.UpdatePasswordRequest;
 import com.apigateway.dto.PasswordResetRequest;
@@ -11,6 +12,7 @@ import com.apigateway.security.JwtUtil;
 import com.apigateway.service.PasswordResetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.time.Instant;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -43,14 +45,15 @@ public class AuthController {
                 encoder.encode(request.password()),
                 request.fullName(),
                 request.email(),
-                request.role());
+                request.role(),
+                Instant.now());
         return repo.save(user).thenReturn("User registered successfully");
     }
 
     // to login a user
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public Mono<String> login(@RequestBody AuthLoginRequest loginRequest) {
+    public Mono<AuthLoginResponse> login(@RequestBody AuthLoginRequest loginRequest) {
         return repo.findByUsername(loginRequest.username())
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")))
                 .flatMap(user -> {
@@ -58,7 +61,8 @@ public class AuthController {
                         return Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
                     }
                     String token = jwtUtil.generateToken(user.username(), user.role());
-                    return Mono.just(token);
+                    Instant createdAt = user.createdAt() != null ? user.createdAt() : Instant.EPOCH;
+                    return Mono.just(new AuthLoginResponse(token, createdAt));
                 });
     }
     
@@ -80,6 +84,7 @@ public class AuthController {
                             if (!encoder.matches(request.oldPassword(), user.password())) {
                                 return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password is incorrect"));
                             }
+                            Instant createdAt = user.createdAt() != null ? user.createdAt() : Instant.now();
 
                             User updatedUser = new User(
                                     user.id(),
@@ -87,7 +92,8 @@ public class AuthController {
                                     encoder.encode(request.newPassword()),
                                     user.fullName(),
                                     user.email(),
-                                    user.role()
+                                    user.role(),
+                                    createdAt
                             );
 
                             return repo.save(updatedUser).thenReturn("Password updated successfully");
