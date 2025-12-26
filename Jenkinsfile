@@ -20,8 +20,22 @@ pipeline {
         stage('Detect Compose CLI') {
             steps {
                 script {
-                    env.COMPOSE_BIN = sh(
-                        script: "if docker compose version >/dev/null 2>&1; then echo 'docker compose'; elif command -v docker-compose >/dev/null 2>&1; then echo 'docker-compose'; else echo 'Missing docker compose binary' && exit 1; fi",
+                    env.COMPOSE_BIN = bat(
+                        script: """
+                        @echo off
+                        docker compose version >NUL 2>&1
+                        if %ERRORLEVEL%==0 (
+                            echo docker compose
+                            exit /b 0
+                        )
+                        docker-compose version >NUL 2>&1
+                        if %ERRORLEVEL%==0 (
+                            echo docker-compose
+                            exit /b 0
+                        )
+                        echo Missing docker compose binary
+                        exit /b 1
+                        """,
                         returnStdout: true
                     ).trim()
                 }
@@ -31,13 +45,13 @@ pipeline {
             steps {
                 script {
                     def mvnFlags = params.SKIP_TESTS ? '-DskipTests' : ''
-                    sh "mvn -B ${mvnFlags} package"
+                    bat "mvn -B ${mvnFlags} package"
                 }
             }
         }
         stage('Build Containers') {
             steps {
-                sh "${env.COMPOSE_BIN} -f docker-compose.yml build"
+                bat "%COMPOSE_BIN% -f docker-compose.yml build"
             }
         }
         stage('Local Deploy') {
@@ -45,13 +59,13 @@ pipeline {
                 expression { return params.AUTO_DEPLOY }
             }
             steps {
-                sh "${env.COMPOSE_BIN} -f docker-compose.yml up -d"
+                bat "%COMPOSE_BIN% -f docker-compose.yml up -d"
             }
         }
         stage('Snapshot') {
             steps {
-                sh "${env.COMPOSE_BIN} -f docker-compose.yml ps"
-                sh "${env.COMPOSE_BIN} -f docker-compose.yml logs --tail=50 || true"
+                bat "%COMPOSE_BIN% -f docker-compose.yml ps"
+                bat returnStatus: true, script: "%COMPOSE_BIN% -f docker-compose.yml logs --tail=50"
             }
         }
     }
@@ -60,7 +74,7 @@ pipeline {
             archiveArtifacts artifacts: '*/target/*.jar', allowEmptyArchive: true
         }
         failure {
-            sh "${env.COMPOSE_BIN} -f docker-compose.yml down || true"
+            bat returnStatus: true, script: "%COMPOSE_BIN% -f docker-compose.yml down"
         }
     }
 }
