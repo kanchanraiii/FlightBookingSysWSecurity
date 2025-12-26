@@ -1,3 +1,4 @@
 /.metadata/
 /.github/workflows/
 /.settings/
+**/target/
