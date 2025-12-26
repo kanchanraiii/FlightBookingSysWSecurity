@@ -42,7 +42,7 @@ public class PasswordResetService {
     }
 
     public Mono<String> requestReset(PasswordResetRequest request) {
-        return userRepository.findByUsername(request.username())
+        return userRepository.findFirstByUsernameOrderByCreatedAtDesc(request.username())
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")))
                 .flatMap(user -> {
                     if (request.email() != null && !request.email().equals(user.email())) {
@@ -64,7 +64,7 @@ public class PasswordResetService {
     }
 
     public Mono<String> confirmReset(PasswordResetConfirmRequest request) {
-        return userRepository.findByUsername(request.username())
+        return userRepository.findFirstByUsernameOrderByCreatedAtDesc(request.username())
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")))
                 .flatMap(user -> tokenRepository
                         .findFirstByUsernameAndCodeAndUsedFalseOrderByExpiresAtDesc(request.username(), request.code())

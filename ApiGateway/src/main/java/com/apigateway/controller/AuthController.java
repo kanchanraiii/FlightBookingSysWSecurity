@@ -9,6 +9,7 @@ import com.apigateway.dto.PasswordResetConfirmRequest;
 import com.apigateway.model.User;
 import com.apigateway.repository.UserRepository;
 import com.apigateway.security.JwtUtil;
+import com.apigateway.security.TokenStore;
 import com.apigateway.service.PasswordResetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,13 +27,16 @@ public class AuthController {
     private final UserRepository repo;
     private final JwtUtil jwtUtil;
     private final PasswordResetService passwordResetService;
+    private final TokenStore tokenStore;
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public AuthController(UserRepository repo, JwtUtil jwtUtil, PasswordResetService passwordResetService) {
+    public AuthController(UserRepository repo, JwtUtil jwtUtil, PasswordResetService passwordResetService,
+            TokenStore tokenStore) {
         this.repo = repo;
         this.jwtUtil = jwtUtil;
         this.passwordResetService = passwordResetService;
+        this.tokenStore = tokenStore;
     }
 
     // to register a user
@@ -47,14 +51,16 @@ public class AuthController {
                 request.email(),
                 request.role(),
                 Instant.now());
-        return repo.save(user).thenReturn("User registered successfully");
+        return repo.findFirstByUsernameOrderByCreatedAtDesc(request.username())
+                .flatMap(existing -> Mono.<String>error(new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists")))
+                .switchIfEmpty(repo.save(user).thenReturn("User registered successfully"));
     }
 
     // to login a user
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public Mono<AuthLoginResponse> login(@RequestBody AuthLoginRequest loginRequest) {
-        return repo.findByUsername(loginRequest.username())
+        return repo.findFirstByUsernameOrderByCreatedAtDesc(loginRequest.username())
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials")))
                 .flatMap(user -> {
                     if (!encoder.matches(loginRequest.password(), user.password())) {
@@ -62,7 +68,11 @@ public class AuthController {
                     }
                     String token = jwtUtil.generateToken(user.username(), user.role());
                     Instant createdAt = user.createdAt() != null ? user.createdAt() : Instant.EPOCH;
-                    return Mono.just(new AuthLoginResponse(token, createdAt));
+                    return tokenStore.storeToken(token, user.username())
+                            .flatMap(ok -> ok
+                                    ? Mono.just(new AuthLoginResponse(token, createdAt))
+                                    : Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                                            "Failed to store session token")));
                 });
     }
     
@@ -78,7 +88,7 @@ public class AuthController {
                 .map(securityContext -> securityContext.getAuthentication())
                 .map(Authentication::getName)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing authentication")))
-                .flatMap(username -> repo.findByUsername(username)
+                .flatMap(username -> repo.findFirstByUsernameOrderByCreatedAtDesc(username)
                         .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")))
                         .flatMap(user -> {
                             if (!encoder.matches(request.oldPassword(), user.password())) {

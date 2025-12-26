@@ -22,9 +22,11 @@ import reactor.core.publisher.Mono;
 public class JwtAuthenticationFilter implements WebFilter {
 
     private final JwtUtil jwtUtil;
+    private final TokenStore tokenStore;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, TokenStore tokenStore) {
         this.jwtUtil = jwtUtil;
+        this.tokenStore = tokenStore;
     }
 
     @Override
@@ -55,13 +57,16 @@ public class JwtAuthenticationFilter implements WebFilter {
         try {
             String normalizedRole = roleClaim.startsWith("ROLE_") ? roleClaim : "ROLE_" + roleClaim;
             Role resolvedRole = Role.valueOf(normalizedRole);
-            return chain.filter(exchange)
-                    .contextWrite(ReactiveSecurityContextHolder.withAuthentication(
-                            new UsernamePasswordAuthenticationToken(
-                                    claims.getSubject(), null,
-                                    List.of(new SimpleGrantedAuthority(resolvedRole.name()))
-                            )
-                    ));
+            return tokenStore.isTokenPresent(token)
+                    .flatMap(present -> present
+                            ? chain.filter(exchange)
+                                    .contextWrite(ReactiveSecurityContextHolder.withAuthentication(
+                                            new UsernamePasswordAuthenticationToken(
+                                                    claims.getSubject(), null,
+                                                    List.of(new SimpleGrantedAuthority(resolvedRole.name()))
+                                            )
+                                    ))
+                            : unauthorized(exchange));
         } catch (IllegalArgumentException ex) {
             return unauthorized(exchange);
         }

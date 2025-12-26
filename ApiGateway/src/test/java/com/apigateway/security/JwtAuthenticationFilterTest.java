@@ -1,6 +1,9 @@
 package com.apigateway.security;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,13 +28,16 @@ class JwtAuthenticationFilterTest {
 
     private JwtAuthenticationFilter filter;
     private JwtUtil jwtUtil;
+    private TokenStore tokenStore;
 
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
         ReflectionTestUtils.setField(jwtUtil, "secret", "01234567890123456789012345678901");
         ReflectionTestUtils.setField(jwtUtil, "expiration", 3600_000L);
-        filter = new JwtAuthenticationFilter(jwtUtil);
+        tokenStore = mock(TokenStore.class);
+        when(tokenStore.isTokenPresent(anyString())).thenReturn(Mono.just(true));
+        filter = new JwtAuthenticationFilter(jwtUtil, tokenStore);
     }
 
     @Test

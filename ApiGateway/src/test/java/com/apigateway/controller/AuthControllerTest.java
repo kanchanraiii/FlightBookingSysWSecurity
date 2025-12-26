@@ -50,6 +50,7 @@ class AuthControllerTest {
 
     @Test
     void registerEncodesPasswordAndPersists() {
+        when(userRepository.findFirstByUsernameOrderByCreatedAtDesc("alice")).thenReturn(Mono.empty());
         when(userRepository.save(any(User.class))).thenAnswer(inv -> Mono.just(inv.getArgument(0, User.class)));
 
         StepVerifier.create(controller.register(sampleUser))
@@ -65,7 +66,7 @@ class AuthControllerTest {
         String encoded = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("password");
         Instant createdAt = Instant.parse("2024-01-01T00:00:00Z");
         User stored = new User("1", "alice", encoded, null, null, Role.ROLE_USER, createdAt);
-        when(userRepository.findByUsername("alice")).thenReturn(Mono.just(stored));
+        when(userRepository.findFirstByUsernameOrderByCreatedAtDesc("alice")).thenReturn(Mono.just(stored));
         when(jwtUtil.generateToken("alice", Role.ROLE_USER)).thenReturn("token123");
 
         StepVerifier.create(controller.login(buildLogin("alice", "password")))
@@ -82,7 +83,7 @@ class AuthControllerTest {
     void loginFailsForInvalidPassword() {
         String encoded = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("password");
         User stored = buildUser("1", "alice", encoded, Role.ROLE_USER);
-        when(userRepository.findByUsername("alice")).thenReturn(Mono.just(stored));
+        when(userRepository.findFirstByUsernameOrderByCreatedAtDesc("alice")).thenReturn(Mono.just(stored));
 
         StepVerifier.create(controller.login(buildLogin("alice", "wrong")))
                 .expectErrorSatisfies(err -> {
@@ -93,7 +94,7 @@ class AuthControllerTest {
 
     @Test
     void loginFailsWhenUserMissing() {
-        when(userRepository.findByUsername("ghost")).thenReturn(Mono.empty());
+        when(userRepository.findFirstByUsernameOrderByCreatedAtDesc("ghost")).thenReturn(Mono.empty());
 
         StepVerifier.create(controller.login(buildLogin("ghost", "password")))
                 .expectError(ResponseStatusException.class)
