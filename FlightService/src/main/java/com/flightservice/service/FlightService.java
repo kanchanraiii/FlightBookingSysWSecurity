@@ -10,10 +10,12 @@ import com.flightservice.exceptions.ResourceNotFoundException;
 import com.flightservice.exceptions.ValidationException;
 import com.flightservice.model.Flights;
 import com.flightservice.model.Seats;
+import com.flightservice.response.SeatMapResponse;
 import com.flightservice.repository.AirlineRepository;
 import com.flightservice.repository.FlightRepository;
 import com.flightservice.repository.SeatsRepository;
 import com.flightservice.request.AddFlightRequest;
+import com.flightservice.request.SeatUpdateRequest;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -143,6 +145,7 @@ public class FlightService {
             s.setFlightId(flightId);
             s.setSeatNo("S" + i);
             s.setBooked(false);
+            s.setAvailable(true);
             seats.add(s);
         }
         return seatRepository.saveAll(seats).then();
@@ -152,4 +155,80 @@ public class FlightService {
     public Flux<Flights> getAllFlights() {
 		return flightInventoryRepository.findAll();
 	}
+
+    public Mono<Void> bookSeats(String flightId, SeatUpdateRequest request) {
+        List<String> seatNumbers = request.getSeatNumbers();
+        if (seatNumbers == null || seatNumbers.isEmpty()) {
+            return Mono.error(new ValidationException("Seat numbers are required"));
+        }
+
+        return seatRepository.findByFlightIdAndSeatNoIn(flightId, seatNumbers)
+                .collectList()
+                .flatMap(seats -> {
+                    if (seats.size() != seatNumbers.size()) {
+                        return Mono.error(new ResourceNotFoundException("One or more seats not found"));
+                    }
+                    boolean anyBooked = seats.stream().anyMatch(Seats::isBooked);
+                    if (anyBooked) {
+                        return Mono.error(new ValidationException("One or more seats already booked"));
+                    }
+                    seats.forEach(seat -> {
+                        seat.setBooked(true);
+                        seat.setAvailable(false);
+                    });
+                    return seatRepository.saveAll(seats).then();
+                });
+    }
+
+    public Mono<Void> releaseSeats(String flightId, SeatUpdateRequest request) {
+        List<String> seatNumbers = request.getSeatNumbers();
+        if (seatNumbers == null || seatNumbers.isEmpty()) {
+            return Mono.error(new ValidationException("Seat numbers are required"));
+        }
+
+        return seatRepository.findByFlightIdAndSeatNoIn(flightId, seatNumbers)
+                .collectList()
+                .flatMap(seats -> {
+                    if (seats.isEmpty()) {
+                        return Mono.error(new ResourceNotFoundException("Seats not found"));
+                    }
+                    seats.forEach(seat -> {
+                        seat.setBooked(false);
+                        seat.setAvailable(true);
+                    });
+                    return seatRepository.saveAll(seats).then();
+                });
+    }
+
+    public Mono<SeatMapResponse> getSeatMap(String flightId) {
+        return flightInventoryRepository.existsById(flightId)
+                .flatMap(exists -> {
+                    if (!exists) {
+                        return Mono.error(new ResourceNotFoundException("Flight not found"));
+                    }
+                    return seatRepository.findByFlightId(flightId)
+                            .collectList()
+                            .map(seats -> {
+                                List<String> booked = new ArrayList<>();
+                                List<String> available = new ArrayList<>();
+                                List<String> cancelled = new ArrayList<>();
+
+                                seats.forEach(seat -> {
+                                    if (seat.isBooked()) {
+                                        booked.add(seat.getSeatNo());
+                                    } else if (!seat.isAvailable()) {
+                                        cancelled.add(seat.getSeatNo());
+                                    } else {
+                                        available.add(seat.getSeatNo());
+                                    }
+                                });
+
+                                booked.sort(String::compareTo);
+                                available.sort(String::compareTo);
+                                cancelled.sort(String::compareTo);
+
+                                return new SeatMapResponse(flightId, available, booked, cancelled);
+                            });
+                });
+    }
 }

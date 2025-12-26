@@ -108,7 +108,6 @@ class BookingServicePrivateCoverageTest {
 
         when(passengerRepository.deleteByBookingId("BID")).thenReturn(Mono.error(new RuntimeException("p")));
         when(bookingRepository.deleteById("BID")).thenReturn(Mono.error(new RuntimeException("b")));
-        when(flightClient.releaseSeats("OUT", 1)).thenReturn(Mono.error(new RuntimeException("f")));
 
         Method m = BookingService.class.getDeclaredMethod("rollbackBooking", Booking.class);
         m.setAccessible(true);

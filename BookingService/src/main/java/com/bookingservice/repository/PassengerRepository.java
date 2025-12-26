@@ -6,4 +6,6 @@ import com.bookingservice.model.Passenger;
 public interface PassengerRepository extends ReactiveMongoRepository<Passenger, String>{
 
     reactor.core.publisher.Mono<Void> deleteByBookingId(String bookingId);
+
+    reactor.core.publisher.Flux<Passenger> findByBookingId(String bookingId);
 }

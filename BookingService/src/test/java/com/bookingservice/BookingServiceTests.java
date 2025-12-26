@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
 
 import java.util.List;
 
@@ -85,6 +87,8 @@ class BookingServiceTests {
         when(passengerRepository.deleteByBookingId(anyString())).thenReturn(Mono.empty());
         when(bookingRepository.deleteById(anyString())).thenReturn(Mono.empty());
         when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
+        when(passengerRepository.findByBookingId(anyString())).thenReturn(Flux.empty());
         when(bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(anyString(), anyString(), anyInt()))
                 .thenReturn(Mono.just(false));
     }
@@ -101,7 +105,7 @@ class BookingServiceTests {
     @Test
     void bookFlight_oneWay_success() {
         when(flightClient.getFlight("F1")).thenReturn(Mono.just(flightDto));
-        when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         when(bookingRepository.save(any())).thenAnswer(inv -> {
             Booking b = inv.getArgument(0);
             ReflectionTestUtils.setField(b, "bookingId", "B1");
@@ -115,7 +119,7 @@ class BookingServiceTests {
                 })
                 .verifyComplete();
 
-        verify(flightClient, times(1)).reserveSeats("F1", 2);
+        verify(flightClient, times(1)).reserveSeatNumbers("F1", List.of("S1", "S1"));
         verify(eventProducer, times(1)).publish(any());
         verify(emailService, times(1)).sendBookingNotification(any(), any());
     }
@@ -157,7 +161,7 @@ class BookingServiceTests {
 
         when(flightClient.getFlight("F1")).thenReturn(Mono.just(flightDto));
         when(flightClient.getFlight("F2")).thenReturn(Mono.just(returnDto));
-        when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         when(bookingRepository.save(any())).thenAnswer(inv -> {
             Booking b = inv.getArgument(0);
             ReflectionTestUtils.setField(b, "bookingId", "B2");
@@ -171,7 +175,8 @@ class BookingServiceTests {
                 })
                 .verifyComplete();
 
-        verify(flightClient, times(2)).reserveSeats(anyString(), anyInt());
+        verify(flightClient, times(1)).reserveSeatNumbers("F1", List.of("S1", "S1"));
+        verify(flightClient, times(1)).reserveSeatNumbers("F2", List.of("R1", "R1"));
         verify(eventProducer, times(1)).publish(any());
         verify(emailService, times(1)).sendBookingNotification(any(), any());
     }
@@ -214,7 +219,7 @@ class BookingServiceTests {
     @Test
     void bookFlight_sideEffectsFailureIsSwallowed() {
         when(flightClient.getFlight("F1")).thenReturn(Mono.just(flightDto));
-        when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         when(eventProducer.publish(any())).thenReturn(Mono.just(false));
         when(bookingRepository.save(any())).thenAnswer(inv -> {
             Booking b = inv.getArgument(0);
@@ -264,15 +269,22 @@ class BookingServiceTests {
         booking.setTotalPassengers(2);
         booking.setStatus(BookingStatus.CONFIRMED);
 
+        com.bookingservice.model.Passenger p1 = new com.bookingservice.model.Passenger();
+        p1.setSeatOutbound("S1");
+        com.bookingservice.model.Passenger p2 = new com.bookingservice.model.Passenger();
+        p2.setSeatOutbound("S2");
+
         when(bookingRepository.findByPnrOutbound("PNR123")).thenReturn(Mono.just(booking));
         when(bookingRepository.save(any())).thenReturn(Mono.just(booking));
-        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(passengerRepository.findByBookingId("B1")).thenReturn(Flux.just(p1, p2));
+        when(flightClient.releaseSeatNumbers(eq("F1"), anyList())).thenReturn(Mono.empty());
         StepVerifier.create(bookingService.cancelTicket("PNR123"))
                 .assertNext(map -> assertEquals("Booking cancelled", map.get("message")))
                 .verifyComplete();
 
         verify(eventProducer, times(1)).publish(any());
         verify(emailService, times(1)).sendBookingNotification(any(), any());
+        verify(flightClient, times(1)).releaseSeatNumbers("F1", List.of("S1", "S2"));
     }
 
     @Test
@@ -284,14 +296,23 @@ class BookingServiceTests {
         booking.setTotalPassengers(2);
         booking.setStatus(BookingStatus.CONFIRMED);
 
+        com.bookingservice.model.Passenger p1 = new com.bookingservice.model.Passenger();
+        p1.setSeatOutbound("S1");
+        p1.setSeatReturn("R1");
+        com.bookingservice.model.Passenger p2 = new com.bookingservice.model.Passenger();
+        p2.setSeatOutbound("S2");
+        p2.setSeatReturn("R2");
+
         when(bookingRepository.findByPnrOutbound("PNR123")).thenReturn(Mono.just(booking));
         when(bookingRepository.save(any())).thenReturn(Mono.just(booking));
-        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(passengerRepository.findByBookingId("B1")).thenReturn(Flux.just(p1, p2));
+        when(flightClient.releaseSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         StepVerifier.create(bookingService.cancelTicket("PNR123"))
                 .assertNext(map -> assertEquals("Booking cancelled", map.get("message")))
                 .verifyComplete();
 
-        verify(flightClient, times(2)).releaseSeats(anyString(), anyInt());
+        verify(flightClient, times(1)).releaseSeatNumbers("F1", List.of("S1", "S2"));
+        verify(flightClient, times(1)).releaseSeatNumbers("F2", List.of("R1", "R2"));
     }
 
     @Test
@@ -340,7 +361,7 @@ class BookingServiceTests {
     void bookFlight_emailFailureAddsWarning() {
         request.setPassengers(List.of(passenger("Warned")));
         when(flightClient.getFlight("F1")).thenReturn(Mono.just(flightDto));
-        when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         when(bookingRepository.save(any())).thenAnswer(inv -> {
             Booking b = inv.getArgument(0);
             ReflectionTestUtils.setField(b, "bookingId", "BWARN");
@@ -363,7 +384,12 @@ class BookingServiceTests {
         booking.setStatus(BookingStatus.CONFIRMED);
         when(bookingRepository.findByPnrOutbound("PNR-KAF")).thenReturn(Mono.just(booking));
         when(bookingRepository.save(any())).thenReturn(Mono.just(booking));
-        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        com.bookingservice.model.Passenger p1 = new com.bookingservice.model.Passenger();
+        p1.setSeatOutbound("S1");
+        com.bookingservice.model.Passenger p2 = new com.bookingservice.model.Passenger();
+        p2.setSeatOutbound("S2");
+        when(passengerRepository.findByBookingId("B1")).thenReturn(Flux.just(p1, p2));
+        when(flightClient.releaseSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         when(eventProducer.publish(any())).thenReturn(Mono.just(false));
 
         StepVerifier.create(bookingService.cancelTicket("PNR-KAF"))

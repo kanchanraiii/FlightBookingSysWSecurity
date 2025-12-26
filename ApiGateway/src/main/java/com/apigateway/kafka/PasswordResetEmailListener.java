@@ -48,7 +48,11 @@ public class PasswordResetEmailListener {
             }
 
             SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setFrom(from);
+            if (from != null && !from.isBlank()) {
+                mail.setFrom(from);
+            } else {
+                log.warn("No valid from address configured; using default transport sender address");
+            }
             mail.setTo(email);
             mail.setSubject("Your password reset code");
             mail.setText("Hi " + username + ",\n\n"

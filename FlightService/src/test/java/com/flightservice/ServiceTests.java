@@ -1,10 +1,13 @@
 package com.flightservice;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import com.flightservice.exceptions.ResourceNotFoundException;
 import com.flightservice.exceptions.ValidationException;
 import com.flightservice.model.Airline;
@@ -16,6 +19,7 @@ import com.flightservice.repository.FlightRepository;
 import com.flightservice.repository.SeatsRepository;
 import com.flightservice.request.AddAirlineRequest;
 import com.flightservice.request.AddFlightRequest;
+import com.flightservice.request.SeatUpdateRequest;
 import com.flightservice.service.AirlineService;
 import com.flightservice.service.FlightService;
 
@@ -164,6 +168,91 @@ class ServiceLayerTest {
 
         StepVerifier.create(flightService.getAllFlights())
                 .expectNextCount(1)
+                .verifyComplete();
+    }
+
+    @Test
+    void getSeatMap_groupsSeats() {
+        Seats booked = new Seats();
+        booked.setSeatNo("S3");
+        booked.setAvailable(false);
+        booked.setBooked(true);
+        booked.setFlightId("F1");
+
+        Seats available = new Seats();
+        available.setSeatNo("S1");
+        available.setAvailable(true);
+        available.setBooked(false);
+        available.setFlightId("F1");
+
+        Seats cancelled = new Seats();
+        cancelled.setSeatNo("S2");
+        cancelled.setAvailable(false);
+        cancelled.setBooked(false);
+        cancelled.setFlightId("F1");
+
+        when(flightRepository.existsById("F1")).thenReturn(Mono.just(true));
+        when(seatsRepository.findByFlightId("F1")).thenReturn(Flux.just(booked, available, cancelled));
+
+        StepVerifier.create(flightService.getSeatMap("F1"))
+                .assertNext(map -> {
+                    assertEquals(List.of("S1"), map.getUnbookedSeats());
+                    assertEquals(List.of("S3"), map.getBookedSeats());
+                    assertEquals(List.of("S2"), map.getCancelledSeats());
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getSeatMap_missingFlight() {
+        when(flightRepository.existsById("NF")).thenReturn(Mono.just(false));
+
+        StepVerifier.create(flightService.getSeatMap("NF"))
+                .expectError(ResourceNotFoundException.class)
+                .verify();
+    }
+
+    @Test
+    void bookSeats_marksBooked() {
+        SeatUpdateRequest req = new SeatUpdateRequest();
+        req.setSeatNumbers(List.of("S1", "S2"));
+
+        Seats s1 = new Seats();
+        s1.setSeatNo("S1");
+        s1.setFlightId("F1");
+        s1.setAvailable(true);
+        s1.setBooked(false);
+
+        Seats s2 = new Seats();
+        s2.setSeatNo("S2");
+        s2.setFlightId("F1");
+        s2.setAvailable(true);
+        s2.setBooked(false);
+
+        when(seatsRepository.findByFlightIdAndSeatNoIn("F1", req.getSeatNumbers()))
+                .thenReturn(Flux.just(s1, s2));
+        when(seatsRepository.saveAll(anyList())).thenReturn(Flux.just(s1, s2));
+
+        StepVerifier.create(flightService.bookSeats("F1", req))
+                .verifyComplete();
+    }
+
+    @Test
+    void releaseSeats_marksAvailable() {
+        SeatUpdateRequest req = new SeatUpdateRequest();
+        req.setSeatNumbers(List.of("S1"));
+
+        Seats s1 = new Seats();
+        s1.setSeatNo("S1");
+        s1.setFlightId("F1");
+        s1.setAvailable(false);
+        s1.setBooked(true);
+
+        when(seatsRepository.findByFlightIdAndSeatNoIn("F1", req.getSeatNumbers()))
+                .thenReturn(Flux.just(s1));
+        when(seatsRepository.saveAll(anyList())).thenReturn(Flux.just(s1));
+
+        StepVerifier.create(flightService.releaseSeats("F1", req))
                 .verifyComplete();
     }
 }

@@ -3,6 +3,7 @@ package com.bookingservice.service;
 import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.bookingservice.model.BookingEvent;
 import com.bookingservice.model.BookingEventType;
 import com.bookingservice.model.BookingStatus;
 import com.bookingservice.model.TripType;
+import com.bookingservice.model.Passenger;
 import com.bookingservice.repository.BookingRepository;
 import com.bookingservice.repository.PassengerRepository;
 import com.bookingservice.requests.BookingRequest;
@@ -72,7 +74,7 @@ public class BookingService {
 
                 return createBooking(req, flightId, null)
                         .flatMap(saved ->
-                                flightClient.reserveSeats(flightId, count)
+                                flightClient.reserveSeatNumbers(flightId, outboundSeats(req))
                                         .then(savePassengers(req, saved))
                                         .then(emitSideEffects(saved, BookingEventType.BOOKED))
                                         .flatMap(outcome -> handleOutcome(saved, outcome)));
@@ -94,8 +96,8 @@ public class BookingService {
 
                     return createBooking(req, flightId, req.getReturnFlightId())
                             .flatMap(saved ->
-                                    flightClient.reserveSeats(flightId, count)
-                                            .then(flightClient.reserveSeats(req.getReturnFlightId(), count))
+                                    flightClient.reserveSeatNumbers(flightId, outboundSeats(req))
+                                            .then(flightClient.reserveSeatNumbers(req.getReturnFlightId(), returnSeats(req)))
                                             .then(savePassengers(req, saved))
                                             .then(emitSideEffects(saved, BookingEventType.BOOKED))
                                             .flatMap(outcome -> handleOutcome(saved, outcome)));
@@ -187,24 +189,23 @@ public class BookingService {
 
                     booking.setStatus(BookingStatus.CANCELLED);
 
-                    Mono<Void> releaseOutbound =
-                            flightClient.releaseSeats(
-                                    booking.getOutboundFlightId(),
-                                    booking.getTotalPassengers());
+                    return passengerRepository.findByBookingId(booking.getBookingId()).collectList()
+                            .flatMap(passengers -> bookingRepository.save(booking)
+                                    .flatMap(saved -> {
+                                        java.util.List<String> outboundSeats = extractSeats(passengers, true);
+                                        java.util.List<String> returnSeats = extractSeats(passengers, false);
 
-                    Mono<Void> releaseReturn =
-                            booking.getReturnFlight() == null
-                                    ? Mono.empty()
-                                    : flightClient.releaseSeats(
-                                            booking.getReturnFlight(),
-                                            booking.getTotalPassengers());
+                                        Mono<Void> releaseOutboundSeats = releaseSeatNumbersIfAny(saved.getOutboundFlightId(), outboundSeats);
+                                        Mono<Void> releaseReturnSeats = saved.getReturnFlight() == null
+                                                ? Mono.empty()
+                                                : releaseSeatNumbersIfAny(saved.getReturnFlight(), returnSeats);
 
-                    return bookingRepository.save(booking)
-                            .flatMap(saved -> Mono.when(releaseOutbound, releaseReturn)
-                                    .then(emitSideEffects(saved, BookingEventType.CANCELLED))
-                                    .flatMap(outcome -> {
-                                        saved.setWarnings(outcome.warnings());
-                                        return Mono.just(responseWithWarnings("Booking cancelled", outcome.warnings()));
+                                        return Mono.when(releaseOutboundSeats, releaseReturnSeats)
+                                                .then(emitSideEffects(saved, BookingEventType.CANCELLED))
+                                                .flatMap(outcome -> {
+                                                    saved.setWarnings(outcome.warnings());
+                                                    return Mono.just(responseWithWarnings("Booking cancelled", outcome.warnings()));
+                                                });
                                     }));
                 });
     }
@@ -230,6 +231,18 @@ public class BookingService {
         if (available < needed) {
             throw new ValidationException("Not enough seats");
         }
+    }
+
+    private java.util.List<String> outboundSeats(BookingRequest req) {
+        return req.getPassengers().stream()
+                .map(PassengerRequest::getSeatOutbound)
+                .collect(Collectors.toList());
+    }
+
+    private java.util.List<String> returnSeats(BookingRequest req) {
+        return req.getPassengers().stream()
+                .map(PassengerRequest::getSeatReturn)
+                .collect(Collectors.toList());
     }
 
     private void validatePassengers(BookingRequest req, boolean round) {
@@ -306,15 +319,19 @@ public class BookingService {
                 .onErrorResume(ex -> Mono.empty());
         Mono<Void> deleteBooking = bookingRepository.deleteById(booking.getBookingId())
                 .onErrorResume(ex -> Mono.empty());
-        Mono<Void> releaseOutbound = flightClient.releaseSeats(
-                        booking.getOutboundFlightId(),
-                        booking.getTotalPassengers())
+        reactor.core.publisher.Flux<Passenger> passengerFlux =
+                passengerRepository.findByBookingId(booking.getBookingId());
+        if (passengerFlux == null) {
+            passengerFlux = Flux.empty();
+        }
+        Mono<java.util.List<Passenger>> passengersMono = passengerFlux.collectList()
+                .onErrorResume(ex -> Mono.just(java.util.Collections.emptyList()));
+
+        Mono<Void> releaseOutbound = passengersMono.flatMap(passengers ->
+                        releaseSeatNumbersIfAny(booking.getOutboundFlightId(), extractSeats(passengers, true)))
                 .onErrorResume(ex -> Mono.empty());
-        Mono<Void> releaseReturn = booking.getReturnFlight() == null
-                ? Mono.empty()
-                : flightClient.releaseSeats(
-                        booking.getReturnFlight(),
-                        booking.getTotalPassengers())
+        Mono<Void> releaseReturn = passengersMono.flatMap(passengers ->
+                        releaseSeatNumbersIfAny(booking.getReturnFlight(), extractSeats(passengers, false)))
                 .onErrorResume(ex -> Mono.empty());
 
         return Mono.when(deletePassengers, deleteBooking, releaseOutbound, releaseReturn).then();
@@ -345,5 +362,22 @@ public class BookingService {
         event.setTripType(booking.getTripType());
         event.setOccurredAt(Instant.now());
         return event;
+    }
+
+    private java.util.List<String> extractSeats(java.util.List<Passenger> passengers, boolean outbound) {
+        if (passengers == null) {
+            return java.util.Collections.emptyList();
+        }
+        return passengers.stream()
+                .map(p -> outbound ? p.getSeatOutbound() : p.getSeatReturn())
+                .filter(java.util.Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private Mono<Void> releaseSeatNumbersIfAny(String flightId, java.util.List<String> seats) {
+        if (flightId == null || seats == null || seats.isEmpty()) {
+            return Mono.empty();
+        }
+        return flightClient.releaseSeatNumbers(flightId, seats);
     }
 }

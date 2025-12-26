@@ -20,8 +20,10 @@ import org.springframework.http.HttpStatus;
 import com.flightservice.service.AirlineService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import com.flightservice.response.SeatMapResponse;
 import com.flightservice.model.Airline;
 import com.flightservice.request.AddAirlineRequest;
+import com.flightservice.request.SeatUpdateRequest;
 import com.flightservice.service.FlightSearchService;
 
 @RestController
@@ -84,6 +86,25 @@ public class MainController {
 	    @ResponseStatus(HttpStatus.OK)
 	    public Flux<Flights>getAllFlights(){
 	    	return flightService.getAllFlights();
+	    }
+
+	    // to get seat availability for a flight
+	    @GetMapping("/{flightId}/seats")
+	    @ResponseStatus(HttpStatus.OK)
+	    public Mono<SeatMapResponse> getSeatMap(@PathVariable String flightId) {
+	        return flightService.getSeatMap(flightId);
+	    }
+
+	    @PostMapping("/{flightId}/seats/book")
+	    @ResponseStatus(HttpStatus.NO_CONTENT)
+	    public Mono<Void> bookSeats(@PathVariable String flightId, @RequestBody SeatUpdateRequest request) {
+	        return flightService.bookSeats(flightId, request);
+	    }
+
+	    @PostMapping("/{flightId}/seats/release")
+	    @ResponseStatus(HttpStatus.NO_CONTENT)
+	    public Mono<Void> releaseSeats(@PathVariable String flightId, @RequestBody SeatUpdateRequest request) {
+	        return flightService.releaseSeats(flightId, request);
 	    }
 	
 

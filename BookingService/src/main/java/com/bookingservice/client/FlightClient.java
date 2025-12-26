@@ -61,4 +61,27 @@ public class FlightClient {
                 .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))
                 .onErrorResume(ex -> Mono.empty());
     }
+
+    public Mono<Void> reserveSeatNumbers(String flightId, java.util.List<String> seatNumbers) {
+        return webClient.post()
+                .uri("/api/flight/{id}/seats/book", flightId)
+                .bodyValue(java.util.Map.of("seatNumbers", seatNumbers))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))
+                .onErrorResume(ex -> Mono.error(
+                        new ResponseStatusException(
+                                HttpStatus.SERVICE_UNAVAILABLE,
+                                "Seat reservation failed", ex)));
+    }
+
+    public Mono<Void> releaseSeatNumbers(String flightId, java.util.List<String> seatNumbers) {
+        return webClient.post()
+                .uri("/api/flight/{id}/seats/release", flightId)
+                .bodyValue(java.util.Map.of("seatNumbers", seatNumbers))
+                .retrieve()
+                .bodyToMono(Void.class)
+                .transformDeferred(CircuitBreakerOperator.of(circuitBreaker))
+                .onErrorResume(ex -> Mono.empty());
+    }
 }

@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -75,6 +77,7 @@ class BookingServiceTest {
         when(bookingRepository.deleteById(anyString())).thenReturn(Mono.empty());
         when(bookingRepository.existsByOutboundFlightIdAndPassengersNameAndPassengersAge(anyString(), anyString(), anyInt()))
                 .thenReturn(Mono.just(false));
+        when(passengerRepository.findByBookingId(anyString())).thenReturn(Flux.empty());
         when(bookingRepository.save(any(Booking.class))).thenAnswer(invocation -> {
             Booking toSave = invocation.getArgument(0);
             if (toSave.getBookingId() == null) {
@@ -90,8 +93,7 @@ class BookingServiceTest {
         FlightDto outbound = flight("OUT-1", 5);
 
         when(flightClient.getFlight("OUT-1")).thenReturn(Mono.just(outbound));
-        when(flightClient.reserveSeats("OUT-1", request.getPassengers().size()))
-                .thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(eq("OUT-1"), anyList())).thenReturn(Mono.empty());
 
         StepVerifier.create(bookingService.bookFlight("OUT-1", request))
                 .assertNext(booking -> {
@@ -105,7 +107,7 @@ class BookingServiceTest {
                 .verifyComplete();
 
         verify(flightClient, times(1))
-                .reserveSeats("OUT-1", request.getPassengers().size());
+                .reserveSeatNumbers(eq("OUT-1"), anyList());
         verify(passengerRepository, times(1)).saveAll(any(Flux.class));
         verify(bookingRepository, times(1)).save(any(Booking.class));
     }
@@ -118,7 +120,7 @@ class BookingServiceTest {
 
         when(flightClient.getFlight("OUT-2")).thenReturn(Mono.just(outbound));
         when(flightClient.getFlight("RET-2")).thenReturn(Mono.just(inbound));
-        when(flightClient.reserveSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(flightClient.reserveSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
 
         StepVerifier.create(bookingService.bookFlight("OUT-2", request))
                 .assertNext(booking -> {
@@ -130,9 +132,9 @@ class BookingServiceTest {
                 .verifyComplete();
 
         verify(flightClient, times(1))
-                .reserveSeats("OUT-2", request.getPassengers().size());
+                .reserveSeatNumbers(eq("OUT-2"), anyList());
         verify(flightClient, times(1))
-                .reserveSeats("RET-2", request.getPassengers().size());
+                .reserveSeatNumbers(eq("RET-2"), anyList());
         verify(passengerRepository, times(1)).saveAll(any(Flux.class));
     }
 
@@ -151,7 +153,7 @@ class BookingServiceTest {
                 .verify();
 
         verify(bookingRepository, never()).save(any());
-        verify(flightClient, never()).reserveSeats(anyString(), anyInt());
+        verify(flightClient, never()).reserveSeatNumbers(anyString(), anyList());
         verify(passengerRepository, never()).saveAll(any(Flux.class));
     }
 
@@ -236,7 +238,7 @@ class BookingServiceTest {
                 .verify();
 
         verify(bookingRepository, never()).save(any());
-        verify(flightClient, never()).reserveSeats(anyString(), anyInt());
+        verify(flightClient, never()).reserveSeatNumbers(anyString(), anyList());
     }
 
     @Test
@@ -248,9 +250,14 @@ class BookingServiceTest {
         booking.setTotalPassengers(1);
         booking.setStatus(BookingStatus.CONFIRMED);
 
+        com.bookingservice.model.Passenger passenger = new com.bookingservice.model.Passenger();
+        passenger.setSeatOutbound("1A");
+        passenger.setSeatReturn("2A");
+
         when(bookingRepository.findByPnrOutbound("PNR-X")).thenReturn(Mono.just(booking));
         when(bookingRepository.save(any())).thenReturn(Mono.just(booking));
-        when(flightClient.releaseSeats(anyString(), anyInt())).thenReturn(Mono.empty());
+        when(passengerRepository.findByBookingId("B-ROLL")).thenReturn(Flux.just(passenger));
+        when(flightClient.releaseSeatNumbers(anyString(), anyList())).thenReturn(Mono.empty());
         when(eventProducer.publish(any())).thenReturn(Mono.just(false)); // triggers warning
 
         StepVerifier.create(bookingService.cancelTicket("PNR-X"))
@@ -292,7 +299,7 @@ class BookingServiceTest {
                 .verify();
 
         verify(flightClient, times(1)).getFlight("OUT-14");
-        verify(flightClient, never()).reserveSeats(anyString(), anyInt());
+        verify(flightClient, never()).reserveSeatNumbers(anyString(), anyList());
     }
 
     @Test
