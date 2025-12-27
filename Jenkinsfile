@@ -19,10 +19,6 @@ pipeline {
         )
     }
 
-    environment {
-        MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
-    }
-
     stages {
 
         stage('Checkout') {
@@ -31,23 +27,12 @@ pipeline {
             }
         }
 
-        stage('Detect Compose CLI') {
+        stage('Verify Docker') {
             steps {
-                script {
-                    env.COMPOSE_BIN = sh(
-                        script: '''
-                            if docker compose version >/dev/null 2>&1; then
-                                echo docker compose
-                            elif docker-compose version >/dev/null 2>&1; then
-                                echo docker-compose
-                            else
-                                echo "Missing docker compose binary"
-                                exit 1
-                            fi
-                        ''',
-                        returnStdout: true
-                    ).trim()
-                }
+                sh '''
+                    docker --version
+                    docker compose version
+                '''
             }
         }
 
@@ -55,18 +40,16 @@ pipeline {
             steps {
                 script {
                     def mvnFlags = params.SKIP_TESTS ? '-DskipTests' : ''
-                    sh """
-                        mvn -B ${mvnFlags} package
-                    """
+                    sh "mvn -B ${mvnFlags} package"
                 }
             }
         }
 
         stage('Build Containers') {
             steps {
-                sh """
-                    ${env.COMPOSE_BIN} -f docker-compose.yml build
-                """
+                sh '''
+                    docker compose -f docker-compose.yml build
+                '''
             }
         }
 
@@ -75,21 +58,18 @@ pipeline {
                 expression { return params.AUTO_DEPLOY }
             }
             steps {
-                sh """
-                    ${env.COMPOSE_BIN} -f docker-compose.yml up -d
-                """
+                sh '''
+                    docker compose -f docker-compose.yml up -d
+                '''
             }
         }
 
         stage('Snapshot') {
             steps {
-                sh """
-                    ${env.COMPOSE_BIN} -f docker-compose.yml ps
-                """
-                sh(
-                    script: "${env.COMPOSE_BIN} -f docker-compose.yml logs --tail=50",
-                    returnStatus: true
-                )
+                sh '''
+                    docker compose -f docker-compose.yml ps
+                    docker compose -f docker-compose.yml logs --tail=50 || true
+                '''
             }
         }
     }
@@ -99,10 +79,9 @@ pipeline {
             archiveArtifacts artifacts: '*/target/*.jar', allowEmptyArchive: true
         }
         failure {
-            sh(
-                script: "${env.COMPOSE_BIN} -f docker-compose.yml down",
-                returnStatus: true
-            )
+            sh '''
+                docker compose -f docker-compose.yml down || true
+            '''
         }
     }
 }
