@@ -1,0 +1,86 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/kanchanraiii/FlightBookingSysWSecurity.git'
+            }
+        }
+
+        stage('Build Eureka Server') {
+            steps {
+                dir('FlightBookingEurekaServer') {
+                    bat 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Config Server') {
+            steps {
+                dir('ConfigServerFlightBooking') {
+                    bat 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build API Gateway') {
+            steps {
+                dir('ApiGateway') {
+                    bat 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Flight Service') {
+            steps {
+                dir('FlightService') {
+                    bat 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Build Booking Service') {
+            steps {
+                dir('BookingService') {
+                    bat 'mvn package -DskipTests'
+                }
+            }
+        }
+
+        stage('Docker Compose Build') {
+            steps {
+                echo 'Building Docker images using docker-compose'
+                bat 'docker compose build'
+            }
+        }
+        
+        stage('Cleanup'){
+            steps{
+                bat 'docker compose down || exit 0'
+            }
+        }
+
+        stage('Docker Compose Up') {
+            steps {
+                echo 'Starting containers'
+                bat 'docker compose up -d'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+        }
+        failure {
+            echo 'Stopping containers due to failure'
+            bat 'docker compose down'
+        }
+        success {
+            echo 'Application is up and running'
+        }
+    }
+}
