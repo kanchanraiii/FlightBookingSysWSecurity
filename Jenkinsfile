@@ -9,13 +9,13 @@ pipeline {
     parameters {
         booleanParam(
             name: 'SKIP_TESTS',
-            defaultValue: false,
-            description: 'Skip Maven tests during packaging'
+            defaultValue: true,
+            description: 'Skip Maven tests'
         )
         booleanParam(
             name: 'AUTO_DEPLOY',
             defaultValue: true,
-            description: 'Run docker compose up -d after building'
+            description: 'Run docker compose up -d after build'
         )
     }
 
@@ -40,26 +40,40 @@ pipeline {
             steps {
                 script {
                     def mvnFlags = params.SKIP_TESTS ? '-DskipTests' : ''
-                    sh "mvn -B ${mvnFlags} package"
+
+                    def services = [
+                        'ApiGateway',
+                        'BookingService',
+                        'ConfigServerFlightBooking',
+                        'FlightBookingEurekaServer',
+                        'FlightService'
+                    ]
+
+                    for (service in services) {
+                        echo "Packaging ${service}"
+                        dir(service) {
+                            sh "mvn -B ${mvnFlags} package"
+                        }
+                    }
                 }
             }
         }
 
-        stage('Build Containers') {
+        stage('Build Docker Images') {
             steps {
                 sh '''
-                    docker compose -f docker-compose.yml build
+                    docker compose build
                 '''
             }
         }
 
-        stage('Local Deploy') {
+        stage('Deploy (Local)') {
             when {
                 expression { return params.AUTO_DEPLOY }
             }
             steps {
                 sh '''
-                    docker compose -f docker-compose.yml up -d
+                    docker compose up -d
                 '''
             }
         }
@@ -67,8 +81,8 @@ pipeline {
         stage('Snapshot') {
             steps {
                 sh '''
-                    docker compose -f docker-compose.yml ps
-                    docker compose -f docker-compose.yml logs --tail=50 || true
+                    docker compose ps
+                    docker compose logs --tail=50 || true
                 '''
             }
         }
@@ -76,12 +90,15 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '*/target/*.jar', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
         }
         failure {
             sh '''
-                docker compose -f docker-compose.yml down || true
+                docker compose down || true
             '''
+        }
+        success {
+            echo 'Flight Booking system built and deployed successfully'
         }
     }
 }
